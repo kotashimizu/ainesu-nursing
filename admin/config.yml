@@ -1,0 +1,57 @@
+# Netlify CMS設定ファイル
+backend:
+  name: git-gateway
+  branch: main # メインブランチ
+  
+# アップロードした画像の保存先
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+# 日本語設定
+locale: 'ja'
+
+# エディタ設定
+editor:
+  preview: true # プレビュー機能を有効化
+
+# コレクション（投稿タイプ）
+collections:
+  # お知らせ・ブログ
+  - name: "blog"
+    label: "お知らせ・ブログ"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "/blog/{{slug}}"
+    fields:
+      - {label: "レイアウト", name: "layout", widget: "hidden", default: "post"}
+      - {label: "タイトル", name: "title", widget: "string", required: true}
+      - {label: "公開日", name: "date", widget: "datetime", format: "YYYY-MM-DD", required: true}
+      - {label: "カテゴリ", name: "category", widget: "select", options: ["お知らせ", "訪問看護", "小児看護", "精神科看護", "採用情報", "その他"], required: true}
+      - {label: "サムネイル画像", name: "thumbnail", widget: "image", required: false}
+      - {label: "概要（一覧表示用）", name: "description", widget: "text", required: true, pattern: ['^.{1,100}$', '100文字以内で入力してください']}
+      - {label: "本文", name: "body", widget: "markdown", required: true}
+      - {label: "下書き", name: "draft", widget: "boolean", default: false}
+
+  # ページ編集（固定ページ）
+  - name: "pages"
+    label: "固定ページ"
+    files:
+      - label: "トップページのお知らせ"
+        name: "home_news"
+        file: "_data/home_news.yml"
+        fields:
+          - label: "お知らせ"
+            name: "news_items"
+            widget: "list"
+            max: 5
+            fields:
+              - {label: "日付", name: "date", widget: "date", format: "YYYY.MM.DD"}
+              - {label: "カテゴリ", name: "category", widget: "select", options: ["お知らせ", "重要", "新着"]}
+              - {label: "タイトル", name: "title", widget: "string"}
+              - {label: "リンク先", name: "link", widget: "string", required: false, hint: "空欄の場合はリンクなし"}
+
+# 追加の設定
+site_url: https://ainesu-nursing.netlify.app
+display_url: https://ainesu-nursing.netlify.app
+logo_url: /images/logo.png

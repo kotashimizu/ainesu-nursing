@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理画面 - あいねすの家</title>
+  
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <!-- Netlify CMS -->
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  
+  <!-- 日本語化 -->
+  <script>
+    // CMSの初期化
+    CMS.init();
+    
+    // 日本語ロケール設定
+    CMS.registerLocale('ja', {
+      auth: {
+        login: 'ログイン',
+        loggingIn: 'ログイン中...',
+        loginWithNetlifyIdentity: 'Netlify IDでログイン',
+        loginWithGitHub: 'GitHubでログイン',
+        errors: {
+          email: 'メールアドレスを入力してください。',
+          password: 'パスワードを入力してください。',
+          authTitle: '認証エラー',
+          authBody: 'ログインに失敗しました。もう一度お試しください。',
+        },
+      },
+      app: {
+        header: {
+          content: 'コンテンツ',
+          media: 'メディア',
+          quickAdd: 'クイック追加',
+        },
+        app: {
+          loading: '読み込み中...',
+          errorHeader: 'CMSの設定を読み込み中にエラーが発生しました',
+          configErrors: '設定エラー',
+          checkConfigYml: 'config.ymlファイルを確認してください。',
+          loadingConfig: '設定を読み込み中...',
+          waitingBackend: 'バックエンドの応答を待機中...',
+        },
+        notFoundPage: {
+          header: 'ページが見つかりません',
+        },
+      },
+      collection: {
+        sidebar: {
+          collections: 'コレクション',
+          searchAll: 'すべて検索',
+        },
+        collectionTop: {
+          viewAs: '表示形式',
+          newButton: '新規 %{collectionLabel}',
+        },
+      },
+      editor: {
+        editorControl: {
+          field: {
+            optional: '任意',
+          },
+        },
+        editorControlPane: {
+          widget: {
+            required: '%{fieldLabel} は必須項目です。',
+            regexPattern: '%{fieldLabel} が %{pattern} パターンと一致しません。',
+            processing: '%{fieldLabel} を処理中...',
+            range: '%{fieldLabel} は %{minValue} から %{maxValue} の間でなければなりません。',
+          },
+        },
+        editor: {
+          onLeavePage: 'このページを離れてもよろしいですか？',
+          onUpdatingWithUnsavedChanges: '保存されていない変更があります。ステータスを更新する前に保存してください。',
+          onPublishingWithUnsavedChanges: '保存されていない変更があります。公開する前に保存してください。',
+          loadingEntry: 'エントリを読み込み中...',
+          confirmLoadBackup: 'このエントリのローカルバックアップが復元されました。使用しますか？',
+        },
+        editorToolbar: {
+          publishing: '公開中...',
+          publish: '公開',
+          published: '公開済み',
+          unpublish: '公開取り消し',
+          unpublishing: '公開を取り消し中...',
+          publishAndCreateNew: '公開して新規作成',
+          deleteEntry: 'エントリを削除',
+          saving: '保存中...',
+          save: '保存',
+          deleting: '削除中...',
+          updating: '更新中...',
+          status: 'ステータス: %{status}',
+          backCollection: '%{collectionLabel} に戻る',
+          unsavedChanges: '保存されていない変更',
+          changesSaved: '変更を保存しました',
+          draft: '下書き',
+          inReview: 'レビュー中',
+          ready: '準備完了',
+          publishNow: '今すぐ公開',
+        },
+      },
+    });
+    
+    // カスタムプレビュースタイル
+    CMS.registerPreviewStyle('/css/style.css');
+  </script>
+  
+  <style>
+    /* 管理画面のカスタマイズ */
+    body {
+      font-family: "Zen Maru Gothic", "ヒラギノ丸ゴ ProN", "メイリオ", sans-serif;
+    }
+  </style>
+</body>
+</html>
