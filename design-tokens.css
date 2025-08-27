@@ -1,0 +1,392 @@
+/**
+ * コツヨシ訪問看護ステーション デザイントークン
+ * 完全再現用CSSカスタムプロパティ定義
+ */
+
+:root {
+  /* ========================================
+     1. カラーパレット
+     ======================================== */
+  
+  /* プライマリカラー：ブラウン系（信頼・安定・落ち着き） */
+  --color-brown-900: #331a03;     /* 最も暗い */
+  --color-brown-800: #4d2904;     /* より暗い */
+  --color-brown-700: #593105;     /* 暗い */
+  --color-brown-600: #663606;     /* メイン - rgb(102, 54, 6) */
+  --color-brown-500: #7f4208;     /* 標準 */
+  --color-brown-400: #994f0a;     /* やや明るい */
+  --color-brown-300: #b35c0c;     /* 明るい */
+  --color-brown-200: #cc6a0e;     /* より明るい */
+  --color-brown-100: #e67810;     /* 最も明るい */
+  
+  /* プライマリカラー：グリーン系（生命・健康・成長・希望） */
+  --color-green-900: #2d4a00;     /* 最も暗い */
+  --color-green-800: #3d6100;     /* より暗い */
+  --color-green-700: #4d7900;     /* 暗い */
+  --color-green-600: #5a9100;     /* やや暗い */
+  --color-green-500: #78c100;     /* メイン - rgb(120, 193, 0) */
+  --color-green-400: #8fd420;     /* やや明るい */
+  --color-green-300: #a5e040;     /* 明るい */
+  --color-green-200: #acd965;     /* より明るい - rgb(172, 217, 101) */
+  --color-green-100: #cef5a2;     /* 薄緑 - rgb(206, 245, 162) 推定 */
+  --color-green-50: #def7ce;      /* 最も薄い - rgb(222, 247, 206) */
+  
+  /* セカンダリカラー：オレンジ系（活力・親しみ・行動喚起） */
+  --color-orange-900: #cc5a00;    /* 最も暗い */
+  --color-orange-800: #e66500;    /* より暗い */
+  --color-orange-700: #ff7300;    /* 暗い */
+  --color-orange-600: #ff8833;    /* やや暗い */
+  --color-orange-500: #ff9933;    /* ホバー時 */
+  --color-orange-400: #ffb059;    /* メイン - rgb(255, 176, 89) */
+  --color-orange-300: #ffc44d;    /* 明るい - rgb(255, 196, 77) */
+  --color-orange-200: #ffd280;    /* より明るい */
+  --color-orange-100: #ffe0b3;    /* 薄い */
+  --color-orange-50: #fff0d9;     /* 最も薄い */
+  
+  /* ニュートラルカラー：イエロー・ベージュ系（温かさ・優しさ・親近感） */
+  --color-yellow-900: #ccb300;    /* 濃い黄色 */
+  --color-yellow-800: #e6cc00;    /* やや濃い */
+  --color-yellow-700: #f5de00;    /* 標準黄色 */
+  --color-yellow-600: #ffed4d;    /* 明るい黄色 */
+  --color-yellow-500: #fff199;    /* 薄い黄色 */
+  --color-yellow-400: #fff7d4;    /* より薄い - rgb(255, 247, 212) */
+  --color-yellow-300: #fff7e2;    /* 薄黄色 - rgb(255, 247, 226) */
+  --color-yellow-200: #fcf3d0;    /* 薄い - rgb(252, 243, 208) */
+  --color-yellow-100: #ffefbc;    /* ベージュ - rgb(255, 239, 188) */
+  --color-yellow-50: #fffdf5;     /* ほぼ白 */
+  
+  /* ニュートラルカラー：グレー系（背景・境界線） */
+  --color-gray-900: #1a1a1a;      /* 最も暗い */
+  --color-gray-800: #333333;      /* より暗い */
+  --color-gray-700: #4d4d4d;      /* 暗い */
+  --color-gray-600: #666666;      /* やや暗い */
+  --color-gray-500: #808080;      /* 中間 */
+  --color-gray-400: #999999;      /* やや明るい */
+  --color-gray-300: #b3b3b3;      /* 明るい */
+  --color-gray-200: #cccccc;      /* より明るい */
+  --color-gray-100: #e6e6e6;      /* 薄い */
+  --color-gray-50: #f6f6ec;       /* クリーム - rgb(246, 246, 236) */
+  
+  /* アクセントカラー：ブルー系（清潔・信頼・プロフェッショナル） */
+  --color-blue-500: #3498db;      /* 標準青 */
+  --color-blue-400: #5dade2;      /* やや明るい */
+  --color-blue-300: #85c1e9;      /* 明るい */
+  --color-blue-200: #aed6f1;      /* 薄い */
+  --color-blue-100: #d6eaf8;      /* より薄い */
+  --color-blue-50-light: #e9f0f7; /* 空色 - rgb(233, 240, 247) */
+  --color-blue-50-ice: #f2f6f9;   /* アイス - rgb(242, 246, 249) */
+  --color-blue-50-cool: #f3f7fa;  /* クール - rgb(243, 247, 250) */
+  
+  /* 基本カラー */
+  --color-white: #ffffff;          /* 純白 */
+  --color-black: #000000;          /* 純黒 */
+  
+  /* ========================================
+     2. 背景色パレット（セクション用）
+     ======================================== */
+  
+  --bg-primary: #ffffff;           /* メイン背景 */
+  --bg-section-cream: #f6f6ec;     /* クリーム色セクション */
+  --bg-section-yellow-pale: #fff7e2; /* 薄黄色セクション */
+  --bg-section-green-pale: #def7ce;  /* 薄緑色セクション */
+  --bg-section-gray-light: #f7f7ed;  /* 薄灰色セクション */
+  --bg-section-yellow-warm: #fff6d7; /* 温かい黄色セクション */
+  --bg-section-yellow-sunny: #fff7d4; /* 明るい黄色セクション */
+  --bg-section-blue-cool: #f3f7fa;   /* クールブルーセクション */
+  --bg-section-blue-sky: #e9f0f7;    /* スカイブルーセクション */
+  --bg-section-blue-ice: #f2f6f9;    /* アイスブルーセクション */
+  
+  /* ========================================
+     3. タイポグラフィ
+     ======================================== */
+  
+  /* フォントファミリー */
+  --font-primary: "Zen Maru Gothic", "ヒラギノ丸ゴ ProN", "Hiragino Maru Gothic ProN", "メイリオ", Meiryo, sans-serif;
+  --font-accent: "Reross Quadratic", "Roboto", "Arial", sans-serif;
+  --font-fallback: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+  
+  /* フォントサイズ（px） */
+  --font-size-3xs: 10px;
+  --font-size-2xs: 11px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+  --font-size-5xl: 36px;
+  --font-size-6xl: 40px;
+  --font-size-7xl: 48px;
+  --font-size-8xl: 56px;
+  
+  /* フォントサイズ（rem） */
+  --font-size-rem-xs: 0.75rem;    /* 12px */
+  --font-size-rem-sm: 0.875rem;   /* 14px */
+  --font-size-rem-base: 1rem;     /* 16px */
+  --font-size-rem-lg: 1.125rem;   /* 18px */
+  --font-size-rem-xl: 1.25rem;    /* 20px */
+  --font-size-rem-2xl: 1.5rem;    /* 24px */
+  --font-size-rem-3xl: 1.75rem;   /* 28px */
+  --font-size-rem-4xl: 2rem;      /* 32px */
+  --font-size-rem-5xl: 2.25rem;   /* 36px */
+  --font-size-rem-6xl: 2.5rem;    /* 40px */
+  
+  /* フォントウェイト */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  
+  /* 行間（line-height） */
+  --line-height-none: 1;
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.75;    /* 本文用 28px/16px */
+  --line-height-loose: 2;
+  
+  /* 文字間隔（letter-spacing） */
+  --letter-spacing-tighter: -0.05px;
+  --letter-spacing-tight: 0.05px;
+  --letter-spacing-normal: 0.1px;
+  --letter-spacing-wide: 0.2px;
+  --letter-spacing-wider: 0.3px;
+  --letter-spacing-widest: 0.4px;
+  
+  /* ========================================
+     4. スペーシング
+     ======================================== */
+  
+  /* 基本単位 8px グリッド */
+  --spacing-0: 0;
+  --spacing-1: 2px;      /* 0.25単位 */
+  --spacing-2: 4px;      /* 0.5単位 */
+  --spacing-3: 6px;      /* 0.75単位 */
+  --spacing-4: 8px;      /* 1単位 */
+  --spacing-5: 10px;     /* 1.25単位 */
+  --spacing-6: 12px;     /* 1.5単位 */
+  --spacing-8: 16px;     /* 2単位 */
+  --spacing-10: 20px;    /* 2.5単位 */
+  --spacing-12: 24px;    /* 3単位 */
+  --spacing-14: 28px;    /* 3.5単位 */
+  --spacing-16: 32px;    /* 4単位 */
+  --spacing-20: 40px;    /* 5単位 */
+  --spacing-24: 48px;    /* 6単位 */
+  --spacing-28: 56px;    /* 7単位 */
+  --spacing-32: 64px;    /* 8単位 */
+  --spacing-36: 72px;    /* 9単位 */
+  --spacing-40: 80px;    /* 10単位 */
+  --spacing-44: 88px;    /* 11単位 */
+  --spacing-48: 96px;    /* 12単位 */
+  --spacing-52: 104px;   /* 13単位 */
+  --spacing-56: 112px;   /* 14単位 */
+  --spacing-60: 120px;   /* 15単位 */
+  --spacing-64: 128px;   /* 16単位 */
+  --spacing-72: 144px;   /* 18単位 */
+  --spacing-80: 160px;   /* 20単位 */
+  --spacing-96: 192px;   /* 24単位 */
+  
+  /* ========================================
+     5. ボーダー
+     ======================================== */
+  
+  /* ボーダー幅 */
+  --border-width-none: 0;
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+  --border-width-heavy: 4px;
+  
+  /* ボーダーラジアス（角丸） */
+  --border-radius-none: 0;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 24px;
+  --border-radius-3xl: 32px;
+  --border-radius-full: 100px;    /* ボタン用完全丸み */
+  --border-radius-circle: 50%;    /* 円形 */
+  
+  /* ========================================
+     6. シャドウ
+     ======================================== */
+  
+  /* ボックスシャドウ */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  --shadow-md: 4px 3px 5px 0 rgba(0, 0, 0, 0.15);  /* カード標準 */
+  --shadow-lg: 6px 8px 15px 0 rgba(0, 0, 0, 0.2);  /* カードホバー */
+  --shadow-xl: 0 10px 25px 0 rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 15px 35px 0 rgba(0, 0, 0, 0.3);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* カラーシャドウ */
+  --shadow-orange: 0 8px 20px rgba(255, 176, 89, 0.3);  /* ボタンホバー */
+  --shadow-green: 0 8px 20px rgba(120, 193, 0, 0.2);
+  --shadow-brown: 0 8px 20px rgba(102, 54, 6, 0.15);
+  
+  /* ========================================
+     7. トランジション
+     ======================================== */
+  
+  /* トランジション時間 */
+  --transition-fastest: 100ms;
+  --transition-faster: 150ms;
+  --transition-fast: 200ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+  --transition-slower: 700ms;
+  --transition-slowest: 1000ms;
+  
+  /* イージング関数 */
+  --ease-linear: linear;
+  --ease-in: ease-in;
+  --ease-out: ease-out;
+  --ease-in-out: ease-in-out;
+  --ease-default: ease;
+  --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* ========================================
+     8. Z-index レイヤー
+     ======================================== */
+  
+  --z-index-negative: -1;
+  --z-index-base: 0;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-fixed: 300;
+  --z-index-modal-backdrop: 400;
+  --z-index-modal: 500;
+  --z-index-popover: 600;
+  --z-index-tooltip: 700;
+  --z-index-notification: 800;
+  --z-index-top: 900;
+  --z-index-max: 9999;
+  
+  /* ========================================
+     9. ブレークポイント
+     ======================================== */
+  
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1920px;
+  
+  /* ========================================
+     10. コンテナ幅
+     ======================================== */
+  
+  --container-xs: 100%;
+  --container-sm: 540px;
+  --container-md: 720px;
+  --container-lg: 960px;
+  --container-xl: 1140px;
+  --container-2xl: 1320px;
+  --container-max: 1200px;  /* コツヨシ標準 */
+  
+  /* ========================================
+     11. アスペクト比
+     ======================================== */
+  
+  --aspect-square: 1 / 1;
+  --aspect-video: 16 / 9;
+  --aspect-photo: 4 / 3;
+  --aspect-portrait: 3 / 4;
+  --aspect-golden: 1.618 / 1;
+  
+  /* ========================================
+     12. 特殊効果
+     ======================================== */
+  
+  /* ブラー効果 */
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 16px;
+  --blur-xl: 24px;
+  
+  /* 透明度 */
+  --opacity-0: 0;
+  --opacity-5: 0.05;
+  --opacity-10: 0.1;
+  --opacity-15: 0.15;
+  --opacity-20: 0.2;
+  --opacity-25: 0.25;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-75: 0.75;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-95: 0.95;
+  --opacity-100: 1;
+}
+
+/* ========================================
+   13. セマンティックトークン（用途別）
+   ======================================== */
+
+:root {
+  /* テキストカラー */
+  --text-primary: var(--color-brown-600);
+  --text-secondary: var(--color-green-500);
+  --text-muted: var(--color-gray-600);
+  --text-white: var(--color-white);
+  --text-black: var(--color-black);
+  --text-link: var(--color-brown-600);
+  --text-link-hover: var(--color-green-500);
+  
+  /* 背景色 */
+  --bg-body: var(--color-white);
+  --bg-card: var(--color-white);
+  --bg-footer: var(--color-gray-50);
+  
+  /* ボタン */
+  --btn-primary-bg: var(--color-orange-400);
+  --btn-primary-bg-hover: var(--color-orange-500);
+  --btn-primary-text: var(--color-white);
+  --btn-secondary-bg: var(--color-green-500);
+  --btn-secondary-bg-hover: var(--color-green-600);
+  --btn-secondary-text: var(--color-white);
+  
+  /* ボーダー */
+  --border-color: var(--color-gray-200);
+  --border-color-light: var(--color-gray-100);
+  --border-color-focus: var(--color-green-500);
+  
+  /* フォーカス */
+  --focus-ring-color: var(--color-green-500);
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 2px;
+}
+
+/* ========================================
+   14. ダークモード対応（将来実装用）
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* ダークモード時の色定義をここに追加 */
+  }
+}
