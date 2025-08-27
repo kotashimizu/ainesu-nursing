@@ -53,13 +53,59 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // フォームバリデーション
+    // フォーム処理
     const contactForm = document.querySelector('.form--contact');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // URLパラメータをチェックして成功メッセージを表示
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            // 成功メッセージを表示
+            const formContainer = contactForm.parentElement;
+            contactForm.style.display = 'none';
             
-            // 簡単なバリデーション
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                text-align: center;
+                padding: 60px 20px;
+                background: #f0f8f0;
+                border-radius: 16px;
+                border: 2px solid #78c100;
+                margin-top: 20px;
+            `;
+            
+            successMessage.innerHTML = `
+                <svg width="80" height="80" viewBox="0 0 80 80" style="margin-bottom: 24px;">
+                    <circle cx="40" cy="40" r="38" fill="#78c100" opacity="0.1"/>
+                    <circle cx="40" cy="40" r="30" fill="none" stroke="#78c100" stroke-width="3"/>
+                    <path d="M26 40 L34 48 L54 28" stroke="#78c100" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3 style="color: #78c100; margin-bottom: 20px; font-size: 28px; font-weight: 700;">送信完了しました</h3>
+                <p style="color: #333; font-size: 16px; line-height: 1.8; margin-bottom: 12px;">
+                    お問い合わせありがとうございました。<br>
+                    内容を確認の上、担当者より2営業日以内にご連絡させていただきます。
+                </p>
+                <p style="font-size: 14px; color: #666; margin-bottom: 32px;">
+                    お急ぎの場合は、お電話（0532-43-6020）にてお問い合わせください。<br>
+                    受付時間: 平日 8:30〜17:30
+                </p>
+                <a href="/" class="btn btn--primary" style="display: inline-block; padding: 12px 32px; background: #ffb059; color: white; text-decoration: none; border-radius: 100px; font-weight: 700;">
+                    トップページへ戻る
+                </a>
+            `;
+            
+            formContainer.appendChild(successMessage);
+            
+            // お問い合わせセクションまでスクロール
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                setTimeout(() => {
+                    contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+        
+        // フォームバリデーション（送信は阻止しない）
+        contactForm.addEventListener('submit', function(e) {
             const required = contactForm.querySelectorAll('[required]');
             let isValid = true;
             
@@ -67,15 +113,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!field.value.trim()) {
                     isValid = false;
                     field.classList.add('error');
+                    field.style.borderColor = '#ff4444';
                 } else {
                     field.classList.remove('error');
+                    field.style.borderColor = '';
                 }
             });
             
-            if (isValid) {
-                alert('お問い合わせありがとうございます。内容を確認後、ご連絡させていただきます。');
-                contactForm.reset();
-            } else {
+            if (!isValid) {
+                e.preventDefault();
                 alert('必須項目をご入力ください。');
             }
         });
