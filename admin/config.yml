@@ -30,7 +30,25 @@ collections:
       - {label: "カテゴリ", name: "category", widget: "select", options: ["お知らせ", "訪問看護", "小児看護", "精神科看護", "採用情報", "その他"], required: true}
       - {label: "サムネイル画像", name: "thumbnail", widget: "image", required: false}
       - {label: "概要（一覧表示用）", name: "description", widget: "text", required: true, pattern: ['^.{1,100}$', '100文字以内で入力してください']}
-      - {label: "本文", name: "body", widget: "markdown", required: true}
+      - label: "本文"
+        name: "body"
+        widget: "markdown"
+        required: true
+        buttons: 
+          - bold
+          - italic
+          - heading-two
+          - heading-three
+          - heading-four
+          - quote
+          - bulleted-list
+          - numbered-list
+          - link
+        editor_components: 
+          - image
+          - code-block
+        minimal: false
+        sanitize_preview: false
       - {label: "下書き", name: "draft", widget: "boolean", default: false}
 
   # ページ編集（固定ページ）

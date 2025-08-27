@@ -87,6 +87,28 @@
     <!-- メイン -->
     <main id="main" role="main">
         
+        <!-- お知らせセクション -->
+        <section id="news" class="section section--news">
+            <div class="section__container">
+                <div class="section__header">
+                    <h2 class="section__title">お知らせ・最新情報</h2>
+                    <p class="section__subtitle">NEWS & TOPICS</p>
+                </div>
+                <div class="news-list" id="newsListHome">
+                    <!-- 動的に読み込まれます -->
+                    <div class="news-loading">読み込み中...</div>
+                </div>
+                <div class="section__action">
+                    <a href="/blog.html" class="button button--outline">
+                        すべてのお知らせを見る
+                        <svg class="button__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
         <!-- ヒーローセクション -->
         <section class="hero">
             <div class="hero__background">
@@ -459,6 +481,169 @@
     
     <!-- JavaScript -->
     <script src="js/main.js"></script>
+    
+    <!-- お知らせセクションのスタイル -->
+    <style>
+        .section--news {
+            padding: 60px 0;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .news-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .news-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .news-item:hover {
+            background-color: #f8f8f8;
+        }
+        
+        .news-item__date {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+        
+        .news-item__category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--color-green-500, #78c100);
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+        
+        .news-item__category--important {
+            background: var(--color-orange-500, #ff9933);
+        }
+        
+        .news-item__category--nursing {
+            background: var(--color-green-500, #78c100);
+        }
+        
+        .news-item__category--child {
+            background: #4CAF50;
+        }
+        
+        .news-item__category--mental {
+            background: #2196F3;
+        }
+        
+        .news-item__category--recruit {
+            background: #FF5722;
+        }
+        
+        .news-item__title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        .news-loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .section__action {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .button--outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: 2px solid var(--color-orange-500, #ff9933);
+            color: var(--color-orange-500, #ff9933);
+            background: transparent;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .button--outline:hover {
+            background: var(--color-orange-500, #ff9933);
+            color: white;
+        }
+        
+        .button__icon {
+            width: 16px;
+            height: 16px;
+        }
+        
+        @media (max-width: 767px) {
+            .news-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .news-item__date {
+                min-width: auto;
+            }
+        }
+    </style>
+    
+    <!-- お知らせ読み込みスクリプト -->
+    <script>
+        // ブログ記事を読み込む関数
+        async function loadNewsItems() {
+            const newsList = document.getElementById('newsListHome');
+            
+            try {
+                // _postsフォルダから記事を取得する処理
+                // ※静的サイトなので、実際にはビルド時に生成されたJSONを読み込む必要がある
+                // 今は仮のデータを表示
+                const newsHTML = `
+                    <a href="/blog.html" class="news-item">
+                        <time class="news-item__date">2025.05.01</time>
+                        <span class="news-item__category news-item__category--important">重要</span>
+                        <h3 class="news-item__title">訪問看護ステーション「あいねすの家」開設のお知らせ</h3>
+                    </a>
+                    <a href="/blog.html" class="news-item">
+                        <time class="news-item__date">2025.05.01</time>
+                        <span class="news-item__category">お知らせ</span>
+                        <h3 class="news-item__title">ウェブサイトをオープンしました</h3>
+                    </a>
+                `;
+                
+                newsList.innerHTML = newsHTML;
+                
+                // 記事が公開されたら自動的に表示されるようにする
+                // Netlify CMSで記事を公開すると、GitHubにMarkdownファイルが保存される
+                // ビルド時にそれらを読み込んでHTMLに変換する必要がある
+                
+            } catch (error) {
+                console.error('ニュースの読み込みエラー:', error);
+                newsList.innerHTML = '<p style="text-align: center; padding: 20px;">お知らせはまだありません。</p>';
+            }
+        }
+        
+        // ページ読み込み時に実行
+        document.addEventListener('DOMContentLoaded', loadNewsItems);
+    </script>
     
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
