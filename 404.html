@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="お探しのページが見つかりません - あいねすの家 訪問看護ステーション">
+    <title>404 ページが見つかりません - あいねすの家</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .error-404 {
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .error-404__number {
+            font-size: 120px;
+            font-weight: 700;
+            color: var(--color-green-500);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        
+        .error-404__title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-brown-600);
+            margin-bottom: 16px;
+        }
+        
+        .error-404__message {
+            font-size: 18px;
+            color: var(--color-brown-600);
+            margin-bottom: 40px;
+            line-height: 1.75;
+        }
+        
+        .error-404__links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .error-404__link {
+            display: inline-block;
+            padding: 12px 32px;
+            background-color: var(--color-orange-500);
+            color: white;
+            text-decoration: none;
+            border-radius: 100px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .error-404__link:hover {
+            background-color: var(--color-orange-400);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.3);
+        }
+        
+        .error-404__link--secondary {
+            background-color: var(--color-green-500);
+        }
+        
+        .error-404__link--secondary:hover {
+            background-color: var(--color-green-600);
+            box-shadow: 0 4px 12px rgba(120, 193, 0, 0.3);
+        }
+        
+        .error-404__illustration {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-yellow-100);
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .error-404__illustration::before {
+            content: "?";
+            font-size: 100px;
+            font-weight: 700;
+            color: var(--color-orange-500);
+        }
+        
+        @media (max-width: 767px) {
+            .error-404__number {
+                font-size: 80px;
+            }
+            
+            .error-404__title {
+                font-size: 24px;
+            }
+            
+            .error-404__message {
+                font-size: 16px;
+            }
+            
+            .error-404__illustration {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .error-404__illustration::before {
+                font-size: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__container">
+            <nav class="header__nav header__nav--left">
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/service.html" class="header__nav-link">
+                            <span class="header__nav-text">サービス内容</span>
+                        </a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/#strengths" class="header__nav-link">
+                            <span class="header__nav-text">3つの特徴</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header__logo">
+                <a href="/" class="header__logo-link">
+                    <div class="header__logo-text">
+                        <span class="header__logo-main">あいねすの家</span>
+                        <span class="header__logo-sub">訪問看護ステーション</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="header__nav header__nav--right">
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/flow.html" class="header__nav-link">
+                            <span class="header__nav-text">ご利用の流れ</span>
+                        </a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/company.html" class="header__nav-link">
+                            <span class="header__nav-text">会社概要</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <button type="button" class="header__mobile-menu" aria-label="メニューを開く">
+                <span class="header__mobile-menu-line"></span>
+                <span class="header__mobile-menu-line"></span>
+                <span class="header__mobile-menu-line"></span>
+            </button>
+        </div>
+    </header>
+    
+    <main id="main" role="main">
+        <section class="section section--yellow">
+            <div class="section__container">
+                <div class="error-404">
+                    <div class="error-404__illustration"></div>
+                    <div class="error-404__number">404</div>
+                    <h1 class="error-404__title">ページが見つかりません</h1>
+                    <p class="error-404__message">
+                        お探しのページは移動または削除された可能性があります。<br>
+                        下記のリンクからお探しの情報をご確認ください。
+                    </p>
+                    <div class="error-404__links">
+                        <a href="/" class="error-404__link">
+                            トップページへ
+                        </a>
+                        <a href="/service.html" class="error-404__link error-404__link--secondary">
+                            サービス内容を見る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer__main">
+            <div class="footer__container">
+                <div class="footer__brand">
+                    <div class="footer__logo">
+                        <span class="footer__logo-main">あいねすの家</span>
+                        <span class="footer__logo-sub">訪問看護ステーション</span>
+                    </div>
+                    <p class="footer__tagline">人を想い、人に尽くす</p>
+                    <div class="footer__contact">
+                        <p class="footer__address">
+                            〒440-0057<br>
+                            愛知県豊橋市旭町字餌指1番地4
+                        </p>
+                        <a href="tel:0532-43-6020" class="footer__tel">
+                            0532-43-6020
+                        </a>
+                        <p class="footer__hours">
+                            お電話対応時間: 8:30〜17:30
+                        </p>
+                    </div>
+                </div>
+                
+                <nav class="footer__nav">
+                    <div class="footer__nav-column">
+                        <h3 class="footer__nav-title">サービス</h3>
+                        <ul class="footer__nav-list">
+                            <li><a href="/service.html">サービス内容</a></li>
+                            <li><a href="/flow.html">ご利用の流れ</a></li>
+                            <li><a href="/#strengths">3つの特徴</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__nav-column">
+                        <h3 class="footer__nav-title">企業情報</h3>
+                        <ul class="footer__nav-list">
+                            <li><a href="/company.html">会社概要</a></li>
+                            <li><a href="/company.html#access">アクセス</a></li>
+                            <li><a href="/#news">お知らせ</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__nav-column">
+                        <h3 class="footer__nav-title">その他</h3>
+                        <ul class="footer__nav-list">
+                            <li><a href="/company.html#contact">お問い合わせ</a></li>
+                            <li><a href="/privacy.html">プライバシーポリシー</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="footer__bottom">
+            <div class="footer__container">
+                <p class="footer__copyright">
+                    &copy; 2025 アイデアルサポート株式会社 All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>
