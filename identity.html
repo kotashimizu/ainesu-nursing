@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アカウント管理 - あいねすの家</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Zen Maru Gothic", "ヒラギノ丸ゴ ProN", "メイリオ", sans-serif;
+            background: linear-gradient(135deg, #fff7e2 0%, #ffe5cc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .auth-logo {
+            margin-bottom: 30px;
+        }
+        
+        .auth-logo h1 {
+            font-size: 28px;
+            color: #78c100;
+            margin-bottom: 5px;
+        }
+        
+        .auth-logo p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .auth-content {
+            margin-bottom: 30px;
+        }
+        
+        .auth-content h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .auth-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #78c100;
+        }
+        
+        .auth-button {
+            background: #ff9933;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .auth-button:hover {
+            background: #ff8822;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.3);
+        }
+        
+        .auth-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .auth-links a {
+            color: #78c100;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .auth-message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff9933;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+    
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <h1>あいねすの家</h1>
+            <p>管理画面アカウント設定</p>
+        </div>
+        
+        <div class="auth-content">
+            <div id="loading" class="loading hidden"></div>
+            <div id="authMessage" class="auth-message hidden"></div>
+            
+            <!-- 招待承認フォーム -->
+            <div id="inviteForm" class="hidden">
+                <h2>アカウント作成</h2>
+                <p>管理画面へのアクセス権限が付与されました。パスワードを設定してアカウントを作成してください。</p>
+                <form class="auth-form" onsubmit="handleInvite(event)">
+                    <div class="form-group">
+                        <label for="invitePassword">パスワード</label>
+                        <input type="password" id="invitePassword" name="password" required minlength="8" placeholder="8文字以上で入力">
+                    </div>
+                    <div class="form-group">
+                        <label for="invitePasswordConfirm">パスワード（確認）</label>
+                        <input type="password" id="invitePasswordConfirm" name="passwordConfirm" required minlength="8" placeholder="もう一度入力">
+                    </div>
+                    <button type="submit" class="auth-button">アカウントを作成</button>
+                </form>
+            </div>
+            
+            <!-- パスワードリセットフォーム -->
+            <div id="recoveryForm" class="hidden">
+                <h2>パスワードリセット</h2>
+                <p>新しいパスワードを設定してください。</p>
+                <form class="auth-form" onsubmit="handleRecovery(event)">
+                    <div class="form-group">
+                        <label for="newPassword">新しいパスワード</label>
+                        <input type="password" id="newPassword" name="password" required minlength="8" placeholder="8文字以上で入力">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPasswordConfirm">新しいパスワード（確認）</label>
+                        <input type="password" id="newPasswordConfirm" name="passwordConfirm" required minlength="8" placeholder="もう一度入力">
+                    </div>
+                    <button type="submit" class="auth-button">パスワードを変更</button>
+                </form>
+            </div>
+            
+            <!-- メール確認完了 -->
+            <div id="confirmationSuccess" class="hidden">
+                <h2>メール確認完了</h2>
+                <p>メールアドレスの確認が完了しました。</p>
+                <a href="/admin/" class="auth-button" style="display: inline-block; text-decoration: none;">管理画面へ移動</a>
+            </div>
+            
+            <!-- デフォルトメッセージ -->
+            <div id="defaultMessage" class="hidden">
+                <h2>認証処理中...</h2>
+                <p>しばらくお待ちください。</p>
+                <div class="auth-links">
+                    <a href="/">トップページへ戻る</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // URLハッシュからトークンタイプを判定
+        function getTokenFromHash() {
+            const hash = document.location.hash.replace(/^#/, '');
+            const params = {};
+            hash.split('&').forEach(item => {
+                const [key, value] = item.split('=');
+                params[key] = value;
+            });
+            return params;
+        }
+        
+        // UIの表示切り替え
+        function showElement(id) {
+            document.querySelectorAll('.auth-content > div').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+        
+        // メッセージ表示
+        function showMessage(message, type = 'success') {
+            const messageEl = document.getElementById('authMessage');
+            messageEl.textContent = message;
+            messageEl.className = `auth-message ${type}`;
+            messageEl.classList.remove('hidden');
+        }
+        
+        // 招待承認処理
+        async function handleInvite(event) {
+            event.preventDefault();
+            const password = document.getElementById('invitePassword').value;
+            const passwordConfirm = document.getElementById('invitePasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                showMessage('パスワードが一致しません', 'error');
+                return;
+            }
+            
+            showElement('loading');
+            
+            try {
+                const params = getTokenFromHash();
+                await netlifyIdentity.acceptInvite(params.invite_token, password);
+                showMessage('アカウントが作成されました！');
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 2000);
+            } catch (error) {
+                showElement('inviteForm');
+                showMessage('エラーが発生しました: ' + error.message, 'error');
+            }
+        }
+        
+        // パスワードリセット処理
+        async function handleRecovery(event) {
+            event.preventDefault();
+            const password = document.getElementById('newPassword').value;
+            const passwordConfirm = document.getElementById('newPasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                showMessage('パスワードが一致しません', 'error');
+                return;
+            }
+            
+            showElement('loading');
+            
+            try {
+                const params = getTokenFromHash();
+                await netlifyIdentity.recover(params.recovery_token, password);
+                showMessage('パスワードが変更されました！');
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 2000);
+            } catch (error) {
+                showElement('recoveryForm');
+                showMessage('エラーが発生しました: ' + error.message, 'error');
+            }
+        }
+        
+        // 初期化
+        window.addEventListener('load', () => {
+            const params = getTokenFromHash();
+            
+            if (params.invite_token) {
+                showElement('inviteForm');
+            } else if (params.recovery_token) {
+                showElement('recoveryForm');
+            } else if (params.confirmation_token) {
+                showElement('loading');
+                // 確認トークンの処理
+                netlifyIdentity.confirm(params.confirmation_token)
+                    .then(() => {
+                        showElement('confirmationSuccess');
+                    })
+                    .catch(error => {
+                        showMessage('確認エラー: ' + error.message, 'error');
+                        showElement('defaultMessage');
+                    });
+            } else {
+                showElement('defaultMessage');
+            }
+        });
+        
+        // Netlify Identity初期化
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on('init', user => {
+                if (user && !document.location.hash) {
+                    // すでにログイン済みの場合は管理画面へ
+                    window.location.href = '/admin/';
+                }
+            });
+            
+            window.netlifyIdentity.init();
+        }
+    </script>
+</body>
+</html>
