@@ -9,7 +9,7 @@ class BlogManager {
     async fetchPosts() {
         try {
             // GitHub APIを使用して_postsディレクトリの内容を取得
-            const response = await fetch(`https://api.github.com/repos/kota5656/nursinghome_hp/contents/${this.postsDirectory}`);
+            const response = await fetch(`https://api.github.com/repos/kotashimizu/ainesu-nursing/contents/${this.postsDirectory}`);
             
             if (!response.ok) {
                 console.log('GitHub APIから記事を取得できませんでした');
@@ -25,7 +25,7 @@ class BlogManager {
                     const postResponse = await fetch(file.download_url);
                     const content = await postResponse.text();
                     const post = this.parsePost(content, file.name);
-                    if (post && !post.draft) {
+                    if (post && post.draft !== true) {
                         posts.push(post);
                     }
                 }
@@ -58,7 +58,12 @@ class BlogManager {
                 const match = line.match(/^(\w+):\s*(.*)$/);
                 if (match) {
                     const key = match[1];
-                    const value = match[2].replace(/^["']|["']$/g, '').trim();
+                    let value = match[2].replace(/^["']|["']$/g, '').trim();
+                    
+                    // booleanの値を適切に変換
+                    if (value === 'true') value = true;
+                    else if (value === 'false') value = false;
+                    
                     post[key] = value;
                 }
             }
