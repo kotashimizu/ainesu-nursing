@@ -463,13 +463,13 @@
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
-      // 認証トークンがある場合はidentity.htmlへリダイレクト
+      // 認証トークンがある場合はauth.htmlへリダイレクト
       if (window.location.hash && (
         window.location.hash.includes('invite_token') || 
         window.location.hash.includes('recovery_token') ||
         window.location.hash.includes('confirmation_token')
       )) {
-        window.location.href = '/identity.html' + window.location.hash;
+        window.location.href = '/auth.html' + window.location.hash;
       }
       
       if (window.netlifyIdentity) {

@@ -273,7 +273,7 @@
         }
         
         // 招待承認処理
-        async function handleInvite(event) {
+        function handleInvite(event) {
             event.preventDefault();
             const password = document.getElementById('invitePassword').value;
             const passwordConfirm = document.getElementById('invitePasswordConfirm').value;
@@ -284,22 +284,45 @@
             }
             
             showElement('loading');
+            showMessage('アカウントを作成中...', 'success');
             
-            try {
-                const params = getTokenFromHash();
-                await netlifyIdentity.acceptInvite(params.invite_token, password);
-                showMessage('アカウントが作成されました！');
+            // Netlify Identity Widgetを開いて処理を続行
+            const params = getTokenFromHash();
+            
+            // パスワードを設定してフォームをサブミット
+            // この場合は、Netlify Identity Widgetのモーダルを開く
+            if (window.netlifyIdentity) {
+                // トークン付きでWidgetを開く
+                window.netlifyIdentity.on('signup', () => {
+                    showMessage('アカウントが作成されました！', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/admin/';
+                    }, 2000);
+                });
+                
+                window.netlifyIdentity.on('error', err => {
+                    showElement('inviteForm');
+                    showMessage('エラー: ' + err.message, 'error');
+                });
+                
+                // Identity Widgetを開く
+                window.netlifyIdentity.open('signup');
+                
+                // フォームの値を自動入力するため、少し待機してから処理
                 setTimeout(() => {
-                    window.location.href = '/admin/';
-                }, 2000);
-            } catch (error) {
-                showElement('inviteForm');
-                showMessage('エラーが発生しました: ' + error.message, 'error');
+                    // WidgetのDOMを直接操作してパスワードを設定
+                    const iframe = document.querySelector('.netlify-identity-widget iframe');
+                    if (iframe) {
+                        // iframeの内容にアクセスできない場合は、Widget自体に処理を任せる
+                        showElement('defaultMessage');
+                        showMessage('Netlify Identityウィンドウでパスワードを設定してください', 'success');
+                    }
+                }, 500);
             }
         }
         
         // パスワードリセット処理
-        async function handleRecovery(event) {
+        function handleRecovery(event) {
             event.preventDefault();
             const password = document.getElementById('newPassword').value;
             const passwordConfirm = document.getElementById('newPasswordConfirm').value;
@@ -310,17 +333,24 @@
             }
             
             showElement('loading');
+            showMessage('パスワードを変更中...', 'success');
             
-            try {
-                const params = getTokenFromHash();
-                await netlifyIdentity.recover(params.recovery_token, password);
-                showMessage('パスワードが変更されました！');
-                setTimeout(() => {
-                    window.location.href = '/admin/';
-                }, 2000);
-            } catch (error) {
-                showElement('recoveryForm');
-                showMessage('エラーが発生しました: ' + error.message, 'error');
+            // Netlify Identity Widgetを使用
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.on('login', () => {
+                    showMessage('パスワードが変更されました！', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/admin/';
+                    }, 2000);
+                });
+                
+                window.netlifyIdentity.on('error', err => {
+                    showElement('recoveryForm');
+                    showMessage('エラー: ' + err.message, 'error');
+                });
+                
+                // Recovery処理はWidgetに任せる
+                window.netlifyIdentity.open();
             }
         }
         

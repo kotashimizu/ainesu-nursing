@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証処理 - あいねすの家</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        body {
+            font-family: "Zen Maru Gothic", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff7e2 0%, #ffe5cc 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #78c100;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff9933;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px 0;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #ff9933;
+            color: white;
+            text-decoration: none;
+            border-radius: 100px;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #ff8822;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>あいねすの家</h1>
+        <div class="loading"></div>
+        <p id="status">認証処理を実行中です...</p>
+        <p id="message">しばらくお待ちください。</p>
+        <a href="/" class="btn" style="display:none" id="homeBtn">トップページへ</a>
+    </div>
+
+    <script>
+        // デバッグ用
+        console.log('Current hash:', window.location.hash);
+        
+        // Netlify Identity Widgetの初期化とトークン処理
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.init({
+                APIUrl: 'https://ainesnoie.netlify.app/.netlify/identity'
+            });
+            
+            // 成功時の処理
+            window.netlifyIdentity.on('init', user => {
+                console.log('Identity initialized, user:', user);
+                
+                if (user) {
+                    document.getElementById('status').textContent = '認証が完了しました！';
+                    document.getElementById('message').textContent = '管理画面へ移動します...';
+                    setTimeout(() => {
+                        window.location.href = '/admin/';
+                    }, 2000);
+                } else {
+                    // ユーザーがまだログインしていない場合、Widgetを開く
+                    handleAuthFlow();
+                }
+            });
+            
+            window.netlifyIdentity.on('signup', user => {
+                console.log('User signed up:', user);
+                document.getElementById('status').textContent = 'アカウントが作成されました！';
+                document.getElementById('message').textContent = '管理画面へ移動します...';
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 2000);
+            });
+            
+            window.netlifyIdentity.on('login', user => {
+                console.log('User logged in:', user);
+                document.getElementById('status').textContent = 'ログインしました！';
+                document.getElementById('message').textContent = '管理画面へ移動します...';
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 2000);
+            });
+            
+            window.netlifyIdentity.on('error', err => {
+                console.error('Identity error:', err);
+                document.getElementById('status').textContent = 'エラーが発生しました';
+                document.getElementById('message').textContent = err.message || '処理中にエラーが発生しました。';
+                document.getElementById('homeBtn').style.display = 'inline-block';
+                document.querySelector('.loading').style.display = 'none';
+            });
+        }
+        
+        function handleAuthFlow() {
+            const hash = window.location.hash;
+            console.log('Handling auth flow with hash:', hash);
+            
+            if (hash.includes('invite_token') || hash.includes('recovery_token')) {
+                // トークンがある場合、Widgetモーダルを開く
+                document.getElementById('status').textContent = '認証ウィンドウを開いています...';
+                document.getElementById('message').textContent = 'ポップアップウィンドウでパスワードを設定してください。';
+                
+                setTimeout(() => {
+                    window.netlifyIdentity.open();
+                }, 1000);
+            } else if (hash.includes('confirmation_token')) {
+                document.getElementById('status').textContent = 'メールアドレスを確認中...';
+            } else {
+                // トークンがない場合
+                document.getElementById('status').textContent = '認証情報が見つかりません';
+                document.getElementById('message').textContent = 'メールのリンクからアクセスしてください。';
+                document.getElementById('homeBtn').style.display = 'inline-block';
+                document.querySelector('.loading').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
