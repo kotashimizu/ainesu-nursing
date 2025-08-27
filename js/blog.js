@@ -94,7 +94,7 @@ class BlogManager {
         
         return `
             <article class="blog-card">
-                <a href="/blog/${post.slug}.html" class="blog-card__link">
+                <a href="/post.html?slug=${post.slug}" class="blog-card__link">
                     ${post.thumbnail ? `
                         <div class="blog-card__image">
                             <img src="${post.thumbnail}" alt="${post.title}">
@@ -123,7 +123,7 @@ class BlogManager {
         const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
         
         return `
-            <a href="/blog/${post.slug}.html" class="news__item">
+            <a href="/post.html?slug=${post.slug}" class="news__item">
                 <time class="news__date">${formattedDate}</time>
                 <span class="news__category">${post.category}</span>
                 <span class="news__title">${post.title}</span>
