@@ -399,7 +399,13 @@
                             専門スタッフが丁寧にお答えいたします。
                         </p>
                         
-                        <form class="form form--contact" action="#" method="POST">
+                        <form class="form form--contact" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                            <input type="hidden" name="form-name" value="contact">
+                            <p hidden>
+                                <label>
+                                    Don't fill this out: <input name="bot-field" />
+                                </label>
+                            </p>
                             <div class="form__group">
                                 <label for="contact-type" class="form__label">
                                     お問い合わせ種別
@@ -453,7 +459,7 @@
                                     name="tel" 
                                     class="form__input"
                                     required
-                                    placeholder="000-0000-0000"
+                                    placeholder="090-1234-5678"
                                 >
                             </div>
                             
