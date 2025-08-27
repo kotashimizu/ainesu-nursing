@@ -9,12 +9,13 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Netlify CMS -->
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  <!-- Decap CMS (formerly Netlify CMS) -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <!-- 日本語化 -->
   <script>
-    // CMSの初期化
+    // Decap CMSの初期化
+    const CMS = window.DecapCMS;
     CMS.init();
     
     // 日本語ロケール設定
