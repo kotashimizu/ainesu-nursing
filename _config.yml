@@ -1,0 +1,44 @@
+# Jekyll設定
+title: あいねすの家 訪問看護ステーション
+description: 愛知県豊橋市の訪問看護ステーション
+baseurl: ""
+url: "https://ainesnoie.netlify.app"
+
+# ビルド設定
+markdown: kramdown
+timezone: Asia/Tokyo
+encoding: utf-8
+
+# パーマリンク
+permalink: /blog/:year/:month/:day/:title/
+
+# プラグイン
+plugins:
+  - jekyll-feed
+
+# 除外ファイル
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .gitignore
+  - README.md
+
+# コレクション
+collections:
+  posts:
+    output: true
+    permalink: /blog/:year/:month/:day/:title/
+
+# デフォルト設定
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      
+# ページネーション（必要に応じて）
+paginate: 10
+paginate_path: "/blog/page:num/"

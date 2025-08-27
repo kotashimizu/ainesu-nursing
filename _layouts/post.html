@@ -1,0 +1,184 @@
+---
+layout: default
+---
+
+<header class="header">
+    <div class="header__container">
+        <nav class="header__nav header__nav--left">
+            <ul class="header__nav-list">
+                <li class="header__nav-item">
+                    <a href="/service.html" class="header__nav-link">
+                        <span class="header__nav-text">サービス内容</span>
+                    </a>
+                </li>
+                <li class="header__nav-item">
+                    <a href="/#strengths" class="header__nav-link">
+                        <span class="header__nav-text">3つの特徴</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="header__logo">
+            <a href="/" class="header__logo-link">
+                <div class="header__logo-text">
+                    <span class="header__logo-main">あいねすの家</span>
+                    <span class="header__logo-sub">訪問看護ステーション</span>
+                </div>
+            </a>
+        </div>
+        
+        <nav class="header__nav header__nav--right">
+            <ul class="header__nav-list">
+                <li class="header__nav-item">
+                    <a href="/flow.html" class="header__nav-link">
+                        <span class="header__nav-text">ご利用の流れ</span>
+                    </a>
+                </li>
+                <li class="header__nav-item">
+                    <a href="/company.html" class="header__nav-link">
+                        <span class="header__nav-text">会社概要</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <button type="button" class="header__mobile-menu" aria-label="メニューを開く">
+            <span class="header__mobile-menu-line"></span>
+            <span class="header__mobile-menu-line"></span>
+            <span class="header__mobile-menu-line"></span>
+        </button>
+    </div>
+</header>
+
+<main id="main" role="main">
+    <article class="blog-post">
+        <div class="blog-post__header">
+            <div class="blog-post__meta">
+                <time class="blog-post__date">{{ page.date | date: "%Y.%m.%d" }}</time>
+                <span class="blog-post__category blog-post__category--{{ page.category }}">{{ page.category }}</span>
+            </div>
+            <h1 class="blog-post__title">{{ page.title }}</h1>
+        </div>
+        
+        <div class="blog-post__content">
+            {{ content }}
+        </div>
+        
+        <div class="blog-post__footer">
+            <a href="/blog.html" class="blog-post__back">← お知らせ一覧に戻る</a>
+        </div>
+    </article>
+</main>
+
+<style>
+.blog-post {
+    max-width: 800px;
+    margin: 100px auto 60px;
+    padding: 0 20px;
+}
+
+.blog-post__header {
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.blog-post__meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.blog-post__date {
+    color: #666;
+    font-size: 14px;
+}
+
+.blog-post__category {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #78c100;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 100px;
+}
+
+.blog-post__category--お知らせ { background: #78c100; }
+.blog-post__category--訪問看護 { background: #78c100; }
+.blog-post__category--小児看護 { background: #4CAF50; }
+.blog-post__category--精神科看護 { background: #2196F3; }
+.blog-post__category--採用情報 { background: #FF5722; }
+.blog-post__category--その他 { background: #9E9E9E; }
+
+.blog-post__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.blog-post__content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #333;
+}
+
+.blog-post__content h2 {
+    font-size: 24px;
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #78c100;
+}
+
+.blog-post__content h3 {
+    font-size: 20px;
+    margin: 30px 0 15px;
+}
+
+.blog-post__content p {
+    margin: 20px 0;
+}
+
+.blog-post__content ul,
+.blog-post__content ol {
+    margin: 20px 0;
+    padding-left: 30px;
+}
+
+.blog-post__content li {
+    margin: 10px 0;
+}
+
+.blog-post__content img {
+    max-width: 100%;
+    height: auto;
+    margin: 30px 0;
+    border-radius: 8px;
+}
+
+.blog-post__content blockquote {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f5f5f5;
+    border-left: 4px solid #78c100;
+}
+
+.blog-post__footer {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.blog-post__back {
+    color: #78c100;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.blog-post__back:hover {
+    text-decoration: underline;
+}
+</style>
