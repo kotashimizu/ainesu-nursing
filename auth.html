@@ -130,13 +130,22 @@
             const hash = window.location.hash;
             console.log('Handling auth flow with hash:', hash);
             
-            if (hash.includes('invite_token') || hash.includes('recovery_token')) {
-                // トークンがある場合、Widgetモーダルを開く
+            if (hash.includes('invite_token')) {
+                // 招待トークンの場合
                 document.getElementById('status').textContent = '認証ウィンドウを開いています...';
                 document.getElementById('message').textContent = 'ポップアップウィンドウでパスワードを設定してください。';
                 
                 setTimeout(() => {
                     window.netlifyIdentity.open();
+                }, 1000);
+            } else if (hash.includes('recovery_token')) {
+                // パスワードリセットトークンの場合
+                document.getElementById('status').textContent = 'パスワードリセット画面を開いています...';
+                document.getElementById('message').textContent = '新しいパスワードを設定してください。';
+                
+                setTimeout(() => {
+                    // リセットタブを明示的に開く
+                    window.netlifyIdentity.open('reset');
                 }, 1000);
             } else if (hash.includes('confirmation_token')) {
                 document.getElementById('status').textContent = 'メールアドレスを確認中...';
