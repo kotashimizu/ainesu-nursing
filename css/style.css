@@ -495,6 +495,11 @@ button {
   margin-bottom: var(--spacing-24);
 }
 
+/* サービスセクションのヘッダーは特別なレイアウト */
+#services .section__header {
+  text-align: left;
+}
+
 .section__title {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
@@ -1118,6 +1123,20 @@ button {
   margin-bottom: var(--spacing-16);
 }
 
+/* 私たちの想いセクション */
+.thought {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: var(--spacing-32);
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.thought__content {
+  /* テキストコンテンツのスタイルはそのまま */
+}
+
 .thought__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
@@ -1130,6 +1149,46 @@ button {
   color: var(--color-brown-600);
   line-height: var(--line-height-relaxed);
   margin-bottom: var(--spacing-8);
+}
+
+.thought__illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thought__image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* サービスセクションヘッダー */
+.services__header-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--spacing-24);
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.services__header-text {
+  text-align: left;
+}
+
+.services__header-illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.services__header-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .services-cta {
@@ -1705,6 +1764,19 @@ button {
   }
   
   /* 私たちの想い - スマホ最適化 */
+  .thought {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-24);
+  }
+  
+  .thought__illustration {
+    order: -1;
+  }
+  
+  .thought__image {
+    max-width: 300px;
+  }
+  
   .thought__text {
     font-size: var(--font-size-base);
     line-height: 1.8;
@@ -1717,6 +1789,21 @@ button {
   
   .section__title {
     font-size: var(--font-size-2xl);
+  }
+  
+  /* サービスセクションヘッダー - タブレット対応 */
+  .services__header-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-16);
+    text-align: center;
+  }
+  
+  .services__header-text {
+    text-align: center;
+  }
+  
+  .services__header-image {
+    max-width: 250px;
   }
   
   /* グリッド */
@@ -1819,6 +1906,10 @@ button {
   }
   
   /* 思いセクション */
+  .thought__image {
+    max-width: 250px;
+  }
+  
   .thought__title {
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-8);
@@ -1832,6 +1923,11 @@ button {
   
   .hero__tel-number {
     font-size: var(--font-size-2xl);
+  }
+  
+  /* サービスセクションヘッダー - スマホ対応 */
+  .services__header-image {
+    max-width: 200px;
   }
   
   /* ニュースリスト */
