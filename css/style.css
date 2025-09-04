@@ -1609,7 +1609,73 @@ button {
 }
 
 /* ========================================
-   13. レスポンシブ対応
+   13. 代表挨拶セクション
+   ======================================== */
+
+.message {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--spacing-32);
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.message__photo {
+  position: sticky;
+  top: calc(var(--header-height) + var(--spacing-16));
+}
+
+.message__image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  object-fit: cover;
+  aspect-ratio: 3 / 4;
+}
+
+.message__content {
+  padding-top: var(--spacing-8);
+}
+
+.message__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brown-700);
+  margin-bottom: var(--spacing-16);
+  line-height: var(--line-height-snug);
+}
+
+.message__text {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-brown-600);
+  margin-bottom: var(--spacing-12);
+}
+
+.message__signature {
+  margin-top: var(--spacing-24);
+  padding-top: var(--spacing-16);
+  border-top: 2px solid var(--color-green-500);
+  text-align: right;
+}
+
+.message__position {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin-bottom: var(--spacing-4);
+}
+
+.message__name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brown-700);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* ========================================
+   14. レスポンシブ対応
    ======================================== */
 
 @media (max-width: 768px) {
@@ -1708,6 +1774,27 @@ button {
     padding: var(--spacing-4) var(--spacing-8);
     font-size: var(--font-size-xs);
   }
+  
+  /* 代表挨拶 */
+  .message {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-24);
+  }
+  
+  .message__photo {
+    position: relative;
+    top: 0;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .message__title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .message__signature {
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1761,5 +1848,19 @@ button {
   .price-table th,
   .price-table td {
     padding: var(--spacing-4);
+  }
+  
+  /* 代表挨拶 - スマホ対応 */
+  .message__photo {
+    max-width: 250px;
+  }
+  
+  .message__text {
+    font-size: var(--font-size-sm);
+    line-height: 1.8;
+  }
+  
+  .message__name {
+    font-size: var(--font-size-lg);
   }
 }
