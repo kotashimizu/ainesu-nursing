@@ -135,7 +135,11 @@
     <div id="debugInfo" class="debug-info"></div>
     <button id="debugToggle" class="debug-toggle" onclick="toggleDebugInfo()">Debug</button>
 
+    <script src="js/config.js"></script>
     <script>
+        // 設定から Identity API URL を取得
+        const IDENTITY_API_URL = (window.SITE_CONFIG && window.SITE_CONFIG.identityApiUrl)
+          || (window.location.origin + '/.netlify/identity');
         // =========================
         // デバッグ設定
         // =========================
@@ -245,10 +249,7 @@
                 
                 if (inviteToken) {
                     // 招待トークン用の初期化設定
-                    const initConfig = {
-                        APIUrl: window.location.origin + '/.netlify/identity',
-                        container: null
-                    };
+                    const initConfig = { APIUrl: IDENTITY_API_URL, container: null };
                     debugLog('Initializing with config for invite token', initConfig);
                     
                     window.netlifyIdentity.init(initConfig);
@@ -420,7 +421,7 @@
                 }
             } else {
                 // 通常の初期化（招待トークンがない場合）
-                window.netlifyIdentity.init();
+                window.netlifyIdentity.init({ APIUrl: IDENTITY_API_URL });
             }
             
             // 通常の初期化時の処理（招待トークンがない場合）
@@ -501,6 +502,20 @@
                     }
                 }
                 
+                // よくあるエラーの個別対応
+                if (/no invite/i.test(errorMessage) || /invite not found/i.test(errorMessage)) {
+                    updateStatus('招待が見つかりません', '招待が失効した可能性があります。管理者に再招待をご依頼ください。', true);
+                    return;
+                }
+                if (/expired/i.test(errorMessage)) {
+                    updateStatus('招待の有効期限切れ', 'メールのリンクが期限切れです。管理者に再招待をご依頼ください。', true);
+                    return;
+                }
+                if (/already confirmed/i.test(errorMessage) || /user exists/i.test(errorMessage)) {
+                    updateStatus('すでに登録済みです', '管理画面へ移動し、ログインしてください。', true);
+                    return;
+                }
+
                 // その他のエラー
                 debugLog('Unhandled error', { message: errorMessage, fullError: err });
                 updateStatus('エラーが発生しました', errorMessage || '処理中にエラーが発生しました。招待メールのリンクをもう一度クリックしてください。', true);

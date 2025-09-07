@@ -3,6 +3,22 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 認証トークンが含まれるURLは全ページで auth.html に集約
+    try {
+        if (window.location.hash && (
+            window.location.hash.includes('invite_token') ||
+            window.location.hash.includes('recovery_token') ||
+            window.location.hash.includes('confirmation_token')
+        )) {
+            // 既にauth.htmlであれば何もしない
+            if (!/\/auth\.html$/.test(window.location.pathname)) {
+                window.location.href = '/auth.html' + window.location.hash;
+                return; // 以降の処理は不要
+            }
+        }
+    } catch (e) {
+        // 何もしない（安全にフォールバック）
+    }
     // モバイルメニューの制御
     const mobileMenuButton = document.querySelector('.header__mobile-menu');
     const header = document.querySelector('.header');

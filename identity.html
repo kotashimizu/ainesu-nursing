@@ -180,6 +180,7 @@
     
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="/js/config.js"></script>
 </head>
 <body>
     <div class="auth-container">
@@ -245,6 +246,9 @@
     </div>
     
     <script>
+        // 設定から Identity API URL を取得
+        const IDENTITY_API_URL = (window.SITE_CONFIG && window.SITE_CONFIG.identityApiUrl)
+          || (window.location.origin + '/.netlify/identity');
         // URLハッシュからトークンタイプを判定
         function getTokenFromHash() {
             const hash = document.location.hash.replace(/^#/, '');
@@ -387,7 +391,7 @@
                 }
             });
             
-            window.netlifyIdentity.init();
+            window.netlifyIdentity.init({ APIUrl: IDENTITY_API_URL });
         }
     </script>
 </body>
