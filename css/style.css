@@ -770,6 +770,13 @@ button {
   gap: var(--spacing-12);
 }
 
+/* PCではトップページの「私たちができること」を2列×2行に固定 */
+@media (min-width: 1025px) {
+  #services .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ========================================
    10. フォーム
    ======================================== */
