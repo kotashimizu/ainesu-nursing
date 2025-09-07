@@ -178,6 +178,12 @@ img {
   display: block;
 }
 
+/* PCのみ改行を入れたい箇所で使用するユーティリティ */
+.pc-break { display: none; }
+@media (min-width: 1025px) {
+  .pc-break { display: block; height: 0; }
+}
+
 ul, ol {
   list-style: none;
 }
@@ -380,7 +386,7 @@ button {
 
 .hero__container {
   display: grid;
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 1fr 520px;
   align-items: center;
   gap: var(--spacing-32);
   max-width: var(--container-max);
