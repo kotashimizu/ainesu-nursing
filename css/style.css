@@ -87,6 +87,7 @@
   --spacing-32: 64px;
   --spacing-40: 80px;
   --spacing-48: 96px;
+  --spacing-60: 75px;
   --spacing-64: 128px;
   --spacing-80: 160px;
   
@@ -550,7 +551,7 @@ button {
 
 .section {
   position: relative;
-  padding: var(--spacing-48) 0;
+  padding: var(--spacing-48) 0 var(--spacing-60) 0;
   overflow: hidden;
 }
 
