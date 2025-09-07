@@ -382,6 +382,24 @@ button {
   padding: var(--spacing-20);
   max-width: 900px;
   animation: fadeInUp 1s var(--ease-out-expo);
+  position: relative;
+  z-index: 2;
+}
+
+.hero__illustration {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  max-width: 350px;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.hero__illustration-image {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .hero__subtitle {
@@ -1761,6 +1779,10 @@ button {
   .hero__description {
     font-size: var(--font-size-sm);
     line-height: 1.6;
+  }
+  
+  .hero__illustration {
+    display: none;
   }
   
   /* 私たちの想い - スマホ最適化 */
