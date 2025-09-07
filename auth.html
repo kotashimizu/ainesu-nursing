@@ -159,6 +159,35 @@
         debugLog('User Agent', navigator.userAgent);
         debugLog('Netlify Identity Widget available', !!window.netlifyIdentity);
         
+        // URLからサイト情報を取得
+        const siteUrl = window.location.origin;
+        debugLog('Site URL', siteUrl);
+        
+        // 追加のデバッグ用グローバル関数を定義
+        window.debugNetlifyIdentity = function() {
+            if (window.netlifyIdentity) {
+                debugLog('=== NETLIFY IDENTITY DEBUG INFO ===');
+                debugLog('Current user', window.netlifyIdentity.currentUser());
+                debugLog('Store state', window.netlifyIdentity.store);
+                debugLog('Widget configuration', {
+                    apiUrl: window.netlifyIdentity.store?.api?.apiURL,
+                    siteUrl: window.netlifyIdentity.store?.api?.siteURL
+                });
+                
+                // DOM要素の確認
+                const elements = {
+                    modal: document.querySelector('.netlify-identity-widget'),
+                    iframe: document.querySelector('iframe[title="Netlify Identity Widget"]'),
+                    allIframes: document.querySelectorAll('iframe').length
+                };
+                debugLog('DOM elements', elements);
+                
+                console.log('=== Manual debugging function completed ===');
+            } else {
+                console.log('Netlify Identity not available');
+            }
+        };
+        
         // Netlify Identity Widgetの初期化とトークン処理
         if (window.netlifyIdentity) {
             debugLog('Netlify Identity Widget found, setting up event listeners');
@@ -208,8 +237,56 @@
                                 // Netlify Identity Widgetが自動的にURLの招待トークンを認識する
                                 try {
                                     debugLog('Calling netlifyIdentity.open("signup")');
+                                    
+                                    // ウィジェットの内部状態をチェック
+                                    debugLog('Widget store before open', window.netlifyIdentity.store);
+                                    debugLog('Current user before open', window.netlifyIdentity.currentUser());
+                                    
                                     window.netlifyIdentity.open('signup');
                                     debugLog('Modal open call completed');
+                                    
+                                    // 少し後にモーダルの状態をチェック
+                                    setTimeout(() => {
+                                        debugLog('Widget store after open', window.netlifyIdentity.store);
+                                        
+                                        // モーダルのDOM要素をチェック
+                                        const modal = document.querySelector('.netlify-identity-widget');
+                                        const iframe = document.querySelector('iframe[title="Netlify Identity Widget"]');
+                                        
+                                        debugLog('Modal DOM element found', !!modal);
+                                        debugLog('Iframe element found', !!iframe);
+                                        
+                                        if (modal) {
+                                            debugLog('Modal styles', {
+                                                display: modal.style.display,
+                                                visibility: modal.style.visibility,
+                                                zIndex: modal.style.zIndex,
+                                                position: modal.style.position
+                                            });
+                                        }
+                                        
+                                        if (iframe) {
+                                            debugLog('Iframe properties', {
+                                                src: iframe.src,
+                                                width: iframe.width,
+                                                height: iframe.height,
+                                                style: iframe.style.cssText
+                                            });
+                                        }
+                                        
+                                        // モーダルが見えない場合の対処
+                                        if (!modal || modal.style.display === 'none' || modal.style.visibility === 'hidden') {
+                                            debugLog('Modal appears to be hidden, attempting to make visible');
+                                            if (modal) {
+                                                modal.style.display = 'block';
+                                                modal.style.visibility = 'visible';
+                                                modal.style.zIndex = '9999';
+                                                debugLog('Forced modal visibility');
+                                            }
+                                        }
+                                        
+                                    }, 1000);
+                                    
                                 } catch (openError) {
                                     debugLog('Error opening modal', openError);
                                     updateStatus('モーダル表示エラー', 'ページを再読み込みしてください。', true);
