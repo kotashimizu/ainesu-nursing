@@ -79,9 +79,8 @@
         
         // Netlify Identity Widgetの初期化とトークン処理
         if (window.netlifyIdentity) {
-            window.netlifyIdentity.init({
-                APIUrl: 'https://ainesnoie.netlify.app/.netlify/identity'
-            });
+            // APIUrl をハードコードせず、現在のドメインから自動検出
+            window.netlifyIdentity.init();
             
             // 成功時の処理
             window.netlifyIdentity.on('init', user => {
@@ -124,6 +123,12 @@
                 document.getElementById('homeBtn').style.display = 'inline-block';
                 document.querySelector('.loading').style.display = 'none';
             });
+        } else {
+            // ウィジェットが読み込めない場合のフォールバック
+            document.getElementById('status').textContent = '認証ウィジェットの読み込みに失敗しました';
+            document.getElementById('message').textContent = 'ネットワーク状況を確認し、再度お試しください。改善しない場合は管理者にご連絡ください。';
+            document.getElementById('homeBtn').style.display = 'inline-block';
+            document.querySelector('.loading').style.display = 'none';
         }
         
         function handleAuthFlow() {
