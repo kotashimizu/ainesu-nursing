@@ -62,6 +62,34 @@
             background: #ff8822;
             transform: translateY(-2px);
         }
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .debug-toggle {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            z-index: 1001;
+        }
     </style>
 </head>
 <body>
@@ -73,25 +101,88 @@
         <a href="/" class="btn" style="display:none" id="homeBtn">トップページへ</a>
     </div>
 
+    <!-- デバッグ情報表示 -->
+    <div id="debugInfo" class="debug-info"></div>
+    <button id="debugToggle" class="debug-toggle" onclick="toggleDebugInfo()">Debug</button>
+
     <script>
-        // デバッグ用
-        console.log('Current hash:', window.location.hash);
+        // =========================
+        // デバッグ設定
+        // =========================
+        
+        // デバッグモード有効化
+        const DEBUG_MODE = true;
+        const debugMessages = [];
+        
+        function debugLog(message, data = null) {
+            if (DEBUG_MODE) {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = `[${timestamp}] ${message}`;
+                
+                console.log(`[DEBUG ${timestamp}] ${message}`);
+                if (data) {
+                    console.log(`[DEBUG DATA] `, data);
+                }
+                
+                // 画面上のデバッグ情報にも追加
+                debugMessages.push(logEntry + (data ? ` | ${JSON.stringify(data)}` : ''));
+                updateDebugDisplay();
+            }
+        }
+        
+        function updateDebugDisplay() {
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) {
+                debugDiv.innerHTML = debugMessages.slice(-10).join('<br>'); // 最新10件表示
+            }
+        }
+        
+        function toggleDebugInfo() {
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.style.display = debugDiv.style.display === 'none' || !debugDiv.style.display ? 'block' : 'none';
+        }
+        
+        function updateStatus(status, message, showHome = false) {
+            debugLog(`Status update: ${status} | ${message}`);
+            document.getElementById('status').textContent = status;
+            document.getElementById('message').textContent = message;
+            if (showHome) {
+                document.getElementById('homeBtn').style.display = 'inline-block';
+                document.querySelector('.loading').style.display = 'none';
+            }
+        }
+        
+        // 初期状態をログ出力
+        debugLog('Script started');
+        debugLog('Current URL', window.location.href);
+        debugLog('Current hash', window.location.hash);
+        debugLog('User Agent', navigator.userAgent);
+        debugLog('Netlify Identity Widget available', !!window.netlifyIdentity);
         
         // Netlify Identity Widgetの初期化とトークン処理
         if (window.netlifyIdentity) {
+            debugLog('Netlify Identity Widget found, setting up event listeners');
+            
+            // 全イベントの監視設定
+            const events = ['init', 'login', 'signup', 'logout', 'error', 'open', 'close'];
+            events.forEach(eventName => {
+                window.netlifyIdentity.on(eventName, (user) => {
+                    debugLog(`EVENT: ${eventName}`, { user, timestamp: Date.now() });
+                });
+            });
+            
             // 招待トークンの事前処理
             const hash = window.location.hash;
-            console.log('Pre-processing hash:', hash);
+            debugLog('Pre-processing hash', hash);
             
             // 招待トークン専用処理
             if (hash.includes('invite_token')) {
-                console.log('Found invite token, preparing signup flow');
-                document.getElementById('status').textContent = '招待を処理しています...';
-                document.getElementById('message').textContent = 'パスワード設定画面を準備しています。';
+                debugLog('Found invite token, preparing signup flow');
+                updateStatus('招待を処理しています...', 'パスワード設定画面を準備しています。');
                 
                 // 招待トークンを抽出
                 const inviteToken = extractTokenFromHash(hash, 'invite_token');
-                console.log('Extracted invite token:', inviteToken);
+                debugLog('Extracted invite token', inviteToken);
                 
                 if (inviteToken) {
                     // 招待トークン用の初期化設定
@@ -99,38 +190,59 @@
                         APIUrl: window.location.origin + '/.netlify/identity',
                         container: null
                     };
+                    debugLog('Initializing with config for invite token', initConfig);
                     
                     window.netlifyIdentity.init(initConfig);
                     
                     // 初期化完了後すぐにサインアップモーダルを開く
                     window.netlifyIdentity.on('init', (user) => {
-                        console.log('Identity initialized for invite token, user:', user);
+                        debugLog('Identity initialized for invite token', { user, hasToken: !!inviteToken });
                         
                         if (!user) {
                             // 招待トークンがURLにある状態でサインアップを開く
+                            debugLog('No existing user, preparing to open signup modal');
                             setTimeout(() => {
-                                console.log('Opening signup modal with invite token in URL');
-                                document.getElementById('status').textContent = 'パスワードを設定してください';
-                                document.getElementById('message').textContent = 'ポップアップでパスワードを入力してください。';
+                                debugLog('Opening signup modal with invite token in URL');
+                                updateStatus('パスワードを設定してください', 'ポップアップでパスワードを入力してください。');
                                 
                                 // Netlify Identity Widgetが自動的にURLの招待トークンを認識する
-                                window.netlifyIdentity.open('signup');
+                                try {
+                                    debugLog('Calling netlifyIdentity.open("signup")');
+                                    window.netlifyIdentity.open('signup');
+                                    debugLog('Modal open call completed');
+                                } catch (openError) {
+                                    debugLog('Error opening modal', openError);
+                                    updateStatus('モーダル表示エラー', 'ページを再読み込みしてください。', true);
+                                }
                                 
                                 // モーダルが閉じられた場合の処理
                                 window.netlifyIdentity.on('close', () => {
-                                    console.log('Modal closed, checking user status');
+                                    debugLog('Modal closed, checking user status');
                                     const currentUser = window.netlifyIdentity.currentUser();
+                                    debugLog('Current user after modal close', currentUser);
+                                    
                                     if (!currentUser) {
-                                        document.getElementById('status').textContent = 'パスワード設定が完了していません';
-                                        document.getElementById('message').textContent = 'もう一度パスワード設定を行ってください。';
+                                        updateStatus('パスワード設定が完了していません', 'もう一度パスワード設定を行ってください。');
+                                        // 再試行ボタンを表示
+                                        setTimeout(() => {
+                                            debugLog('Offering retry option');
+                                            document.getElementById('homeBtn').style.display = 'inline-block';
+                                            document.querySelector('.loading').style.display = 'none';
+                                        }, 2000);
+                                    } else {
+                                        debugLog('User successfully created, redirecting to admin');
+                                        updateStatus('パスワード設定完了！', '管理画面へ移動します...');
+                                        setTimeout(() => {
+                                            window.location.href = '/admin/';
+                                        }, 2000);
                                     }
                                 });
                                 
                             }, 500);
                         } else {
                             // 既にログイン済みの場合
-                            document.getElementById('status').textContent = '認証済みです';
-                            document.getElementById('message').textContent = '管理画面へ移動します...';
+                            debugLog('User already authenticated, redirecting to admin');
+                            updateStatus('認証済みです', '管理画面へ移動します...');
                             setTimeout(() => {
                                 window.location.href = '/admin/';
                             }, 1000);
@@ -184,39 +296,39 @@
             });
             
             window.netlifyIdentity.on('error', err => {
-                console.error('Identity error:', err);
+                debugLog('Identity error received', { error: err, message: err.message, stack: err.stack });
                 
                 const errorMessage = err.message || '';
                 const hash = window.location.hash;
                 
                 if (errorMessage.includes('Public signups are disabled')) {
-                    console.log('Public signups disabled error detected');
+                    debugLog('Public signups disabled error detected');
                     
                     if (hash.includes('invite_token')) {
-                        console.log('Attempting to process invite token despite error');
-                        document.getElementById('status').textContent = '招待トークンを再処理中...';
-                        document.getElementById('message').textContent = '少々お待ちください...';
+                        debugLog('Attempting to process invite token despite public signup error');
+                        updateStatus('招待トークンを再処理中...', '少々お待ちください...');
                         
                         const inviteToken = extractTokenFromHash(hash, 'invite_token');
                         if (inviteToken) {
-                            console.log('Retrying signup with invite token after error');
-                            document.getElementById('status').textContent = 'パスワード設定を再試行中...';
-                            document.getElementById('message').textContent = '少々お待ちください...';
+                            debugLog('Retrying signup with invite token after error', inviteToken);
+                            updateStatus('パスワード設定を再試行中...', '少々お待ちください...');
                             
                             // 直接サインアップモーダルを開く（URLのトークンを利用）
                             setTimeout(() => {
                                 try {
+                                    debugLog('Retry: Opening signup modal');
                                     window.netlifyIdentity.open('signup');
-                                    document.getElementById('status').textContent = 'パスワードを設定してください';
-                                    document.getElementById('message').textContent = 'ポップアップでパスワードを入力してください。';
+                                    updateStatus('パスワードを設定してください', 'ポップアップでパスワードを入力してください。');
                                 } catch (modalError) {
-                                    console.error('Failed to open signup modal:', modalError);
+                                    debugLog('Failed to open signup modal in error handler', modalError);
                                     // 最後の手段：identity.html へリダイレクト
-                                    console.log('Redirecting to identity.html as last resort');
+                                    debugLog('Redirecting to identity.html as last resort');
+                                    updateStatus('代替画面へ移動中...', 'しばらくお待ちください...');
                                     window.location.href = '/identity.html' + hash;
                                 }
                             }, 1000);
                         } else {
+                            debugLog('Could not extract token in error handler');
                             handleNoToken();
                         }
                         return;
@@ -224,10 +336,8 @@
                 }
                 
                 // その他のエラー
-                document.getElementById('status').textContent = 'エラーが発生しました';
-                document.getElementById('message').textContent = errorMessage || '処理中にエラーが発生しました。招待メールのリンクをもう一度クリックしてください。';
-                document.getElementById('homeBtn').style.display = 'inline-block';
-                document.querySelector('.loading').style.display = 'none';
+                debugLog('Unhandled error', { message: errorMessage, fullError: err });
+                updateStatus('エラーが発生しました', errorMessage || '処理中にエラーが発生しました。招待メールのリンクをもう一度クリックしてください。', true);
             });
         } else {
             // ウィジェットが読み込めない場合のフォールバック
