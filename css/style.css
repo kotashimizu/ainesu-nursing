@@ -574,7 +574,7 @@ button {
 .section__container {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--spacing-10);
+  padding: 0 var(--spacing-10) var(--spacing-60) var(--spacing-10);
 }
 
 .section__header {
