@@ -79,8 +79,19 @@
         
         // Netlify Identity Widgetの初期化とトークン処理
         if (window.netlifyIdentity) {
+            // 招待トークンの事前処理
+            const hash = window.location.hash;
+            console.log('Pre-processing hash:', hash);
+            
             // APIUrl をハードコードせず、現在のドメインから自動検出
             window.netlifyIdentity.init();
+            
+            // 招待トークンがある場合は、初期化完了前に処理
+            if (hash.includes('invite_token')) {
+                console.log('Found invite token, preparing special handling');
+                document.getElementById('status').textContent = '招待トークンを処理中...';
+                document.getElementById('message').textContent = 'しばらくお待ちください。';
+            }
             
             // 成功時の処理
             window.netlifyIdentity.on('init', user => {
@@ -101,10 +112,36 @@
                         // 招待トークンがある場合は特別な処理
                         document.getElementById('status').textContent = '招待リンクを処理中...';
                         document.getElementById('message').textContent = 'パスワードを設定してください。';
+                        
+                        // 招待トークンを抽出
+                        const inviteToken = extractTokenFromHash(hash, 'invite_token');
+                        console.log('Extracted invite token:', inviteToken);
+                        
                         setTimeout(() => {
-                            // 招待モードでウィジェットを開く
-                            window.netlifyIdentity.open('signup');
-                        }, 500);
+                            try {
+                                // Method 1: 直接acceptInviteを試行
+                                if (inviteToken && window.netlifyIdentity.gotrue) {
+                                    console.log('Attempting acceptInvite with token:', inviteToken);
+                                    window.netlifyIdentity.gotrue.acceptInvite(inviteToken)
+                                        .then(() => {
+                                            console.log('Invite accepted, opening signup');
+                                            window.netlifyIdentity.open('signup');
+                                        })
+                                        .catch(err => {
+                                            console.error('AcceptInvite failed:', err);
+                                            // Method 2: Widget初期化を直接呼び出し
+                                            tryAlternativeInviteMethod(hash);
+                                        });
+                                } else {
+                                    // Method 2: 代替方法を試行
+                                    tryAlternativeInviteMethod(hash);
+                                }
+                            } catch (e) {
+                                console.error('Error in invite processing:', e);
+                                // Method 2: 代替方法を試行
+                                tryAlternativeInviteMethod(hash);
+                            }
+                        }, 1000);
                     } else {
                         handleAuthFlow();
                     }
@@ -161,6 +198,25 @@
             document.getElementById('message').textContent = 'ネットワーク状況を確認し、再度お試しください。改善しない場合は管理者にご連絡ください。';
             document.getElementById('homeBtn').style.display = 'inline-block';
             document.querySelector('.loading').style.display = 'none';
+        }
+        
+        // トークン抽出ヘルパー関数
+        function extractTokenFromHash(hash, tokenName) {
+            const regex = new RegExp(tokenName + '=([^&]+)');
+            const match = hash.match(regex);
+            return match ? match[1] : null;
+        }
+        
+        // 代替招待処理方法
+        function tryAlternativeInviteMethod(hash) {
+            console.log('Trying alternative invite method');
+            
+            // 完全なハッシュをそのまま保持してウィジェットを開く
+            document.getElementById('status').textContent = '招待画面を開いています...';
+            document.getElementById('message').textContent = 'ポップアップでパスワードを設定してください。';
+            
+            // ウィジェットを開く（ハッシュが自動的に処理されることを期待）
+            window.netlifyIdentity.open();
         }
         
         function handleAuthFlow() {
