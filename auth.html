@@ -90,6 +90,36 @@
             font-size: 11px;
             z-index: 1001;
         }
+        
+        /* Netlify Identity Widget 強制表示用スタイル */
+        .netlify-identity-widget {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 999999 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+        
+        .netlify-identity-widget iframe {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 1000000 !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 400px !important;
+            height: 500px !important;
+            border: none !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5) !important;
+        }
     </style>
 </head>
 <body>
@@ -274,16 +304,75 @@
                                             });
                                         }
                                         
-                                        // モーダルが見えない場合の対処
-                                        if (!modal || modal.style.display === 'none' || modal.style.visibility === 'hidden') {
-                                            debugLog('Modal appears to be hidden, attempting to make visible');
-                                            if (modal) {
-                                                modal.style.display = 'block';
-                                                modal.style.visibility = 'visible';
-                                                modal.style.zIndex = '9999';
-                                                debugLog('Forced modal visibility');
+                                        // モーダルの強制表示処理
+                                        if (modal) {
+                                            debugLog('Applying comprehensive modal visibility fixes');
+                                            
+                                            // すべての可能性のある隠れる原因を修正
+                                            modal.style.display = 'block';
+                                            modal.style.visibility = 'visible';
+                                            modal.style.opacity = '1';
+                                            modal.style.zIndex = '999999';
+                                            modal.style.position = 'fixed';
+                                            modal.style.top = '0';
+                                            modal.style.left = '0';
+                                            modal.style.width = '100vw';
+                                            modal.style.height = '100vh';
+                                            modal.style.background = 'rgba(0, 0, 0, 0.8)';
+                                            modal.style.pointerEvents = 'auto';
+                                            
+                                            // 親要素のスタイルもチェック
+                                            let parent = modal.parentElement;
+                                            while (parent && parent !== document.body) {
+                                                parent.style.zIndex = '';
+                                                parent.style.position = '';
+                                                parent.style.overflow = 'visible';
+                                                parent = parent.parentElement;
                                             }
+                                            
+                                            debugLog('Applied comprehensive modal fixes');
                                         }
+                                        
+                                        if (iframe) {
+                                            debugLog('Applying iframe visibility fixes');
+                                            
+                                            iframe.style.display = 'block';
+                                            iframe.style.visibility = 'visible';
+                                            iframe.style.opacity = '1';
+                                            iframe.style.zIndex = '1000000';
+                                            iframe.style.position = 'absolute';
+                                            iframe.style.top = '50%';
+                                            iframe.style.left = '50%';
+                                            iframe.style.transform = 'translate(-50%, -50%)';
+                                            iframe.style.width = '400px';
+                                            iframe.style.height = '500px';
+                                            iframe.style.border = 'none';
+                                            iframe.style.borderRadius = '8px';
+                                            iframe.style.boxShadow = '0 10px 50px rgba(0,0,0,0.5)';
+                                            iframe.style.background = 'white';
+                                            
+                                            debugLog('Applied iframe fixes');
+                                        }
+                                        
+                                        // 追加: body スクロール防止
+                                        document.body.style.overflow = 'hidden';
+                                        
+                                        // 最後の手段: 遅延して再度チェック
+                                        setTimeout(() => {
+                                            const modalCheck = document.querySelector('.netlify-identity-widget');
+                                            const iframeCheck = document.querySelector('iframe[title="Netlify Identity Widget"]');
+                                            
+                                            debugLog('Final visibility check', {
+                                                modalVisible: modalCheck ? window.getComputedStyle(modalCheck).display !== 'none' : false,
+                                                iframeVisible: iframeCheck ? window.getComputedStyle(iframeCheck).display !== 'none' : false
+                                            });
+                                            
+                                            // まだ見えない場合は代替手段
+                                            if (!modalCheck || window.getComputedStyle(modalCheck).display === 'none') {
+                                                debugLog('Modal still not visible, creating manual modal');
+                                                createManualModal(inviteToken);
+                                            }
+                                        }, 2000);
                                         
                                     }, 1000);
                                     
@@ -437,6 +526,68 @@
             document.getElementById('message').textContent = '招待メールのリンクをもう一度クリックしてください。';
             document.getElementById('homeBtn').style.display = 'inline-block';
             document.querySelector('.loading').style.display = 'none';
+        }
+        
+        // 手動モーダル作成（最後の手段）
+        function createManualModal(inviteToken) {
+            debugLog('Creating manual modal as fallback');
+            
+            // 既存のモーダルを削除
+            const existing = document.querySelector('.manual-netlify-modal');
+            if (existing) existing.remove();
+            
+            // 手動モーダルを作成
+            const modal = document.createElement('div');
+            modal.className = 'manual-netlify-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 999999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+                max-width: 400px;
+                text-align: center;
+            `;
+            
+            content.innerHTML = `
+                <h2 style="color: #333; margin-bottom: 20px;">パスワード設定</h2>
+                <p style="color: #666; margin-bottom: 20px;">
+                    Netlify Identityモーダルが表示されない問題が発生しました。<br>
+                    以下の代替手段をお試しください：
+                </p>
+                <button onclick="window.netlifyIdentity.open('signup')" 
+                        style="background: #ff9933; color: white; border: none; padding: 12px 24px; border-radius: 6px; margin: 5px; cursor: pointer;">
+                    モーダル再表示
+                </button>
+                <br>
+                <a href="/identity.html${window.location.hash}" 
+                   style="background: #78c100; color: white; padding: 12px 24px; border-radius: 6px; margin: 5px; text-decoration: none; display: inline-block;">
+                    代替画面へ移動
+                </a>
+                <br>
+                <button onclick="this.closest('.manual-netlify-modal').remove(); document.body.style.overflow = 'auto';" 
+                        style="background: #666; color: white; border: none; padding: 8px 16px; border-radius: 4px; margin: 10px; cursor: pointer; font-size: 12px;">
+                    閉じる
+                </button>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            debugLog('Manual modal created and displayed');
         }
         
         // 代替招待処理方法
