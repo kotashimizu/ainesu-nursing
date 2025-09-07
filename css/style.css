@@ -396,6 +396,17 @@ button {
   opacity: 0.8;
 }
 
+/* SPサイズでのイラスト表示調整 */
+@media (max-width: 768px) {
+  .hero__illustration {
+    position: static;
+    transform: none;
+    max-width: 200px;
+    margin: 0 auto var(--spacing-16) auto;
+    opacity: 0.7;
+  }
+}
+
 .hero__illustration-image {
   width: 100%;
   height: auto;
@@ -1781,8 +1792,13 @@ button {
     line-height: 1.6;
   }
   
-  .hero__illustration {
-    display: none;
+  /* スマホでの背景コントラスト改善 */
+  .hero__content {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-16);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
   
   /* 私たちの想い - スマホ最適化 */
@@ -1925,6 +1941,12 @@ button {
   .hero__description {
     font-size: var(--font-size-sm);
     line-height: 1.7;
+  }
+  
+  /* より小さい画面での背景調整 */
+  .hero__content {
+    margin: var(--spacing-8);
+    padding: var(--spacing-12);
   }
   
   /* 思いセクション */
