@@ -141,7 +141,8 @@
                 document.getElementById('message').textContent = 'ポップアップウィンドウでパスワードを設定してください。';
                 
                 setTimeout(() => {
-                    window.netlifyIdentity.open();
+                    // ログイン画面ではなく招待受諾（パスワード設定）画面を開く
+                    window.netlifyIdentity.open('signup');
                 }, 1000);
             } else if (hash.includes('recovery_token')) {
                 // パスワードリセットトークンの場合
