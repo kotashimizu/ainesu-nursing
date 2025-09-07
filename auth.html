@@ -83,8 +83,19 @@
             const hash = window.location.hash;
             console.log('Pre-processing hash:', hash);
             
+            // 招待トークンがある場合の特別な設定
+            let initConfig = {};
+            
+            if (hash.includes('invite_token')) {
+                // 招待モードでの初期化設定
+                initConfig = {
+                    container: null, // デフォルトのポップアップを使用
+                };
+                console.log('Initializing with invite token configuration');
+            }
+            
             // APIUrl をハードコードせず、現在のドメインから自動検出
-            window.netlifyIdentity.init();
+            window.netlifyIdentity.init(initConfig);
             
             // 招待トークンがある場合は、初期化完了前に処理
             if (hash.includes('invite_token')) {
@@ -118,28 +129,26 @@
                         console.log('Extracted invite token:', inviteToken);
                         
                         setTimeout(() => {
+                            // 招待トークンがある場合は、ウィジェットに直接渡す
+                            console.log('Opening widget for invite token processing');
+                            
+                            // ウィジェットを開き、招待フローを開始
                             try {
-                                // Method 1: 直接acceptInviteを試行
-                                if (inviteToken && window.netlifyIdentity.gotrue) {
-                                    console.log('Attempting acceptInvite with token:', inviteToken);
-                                    window.netlifyIdentity.gotrue.acceptInvite(inviteToken)
-                                        .then(() => {
-                                            console.log('Invite accepted, opening signup');
-                                            window.netlifyIdentity.open('signup');
-                                        })
-                                        .catch(err => {
-                                            console.error('AcceptInvite failed:', err);
-                                            // Method 2: Widget初期化を直接呼び出し
-                                            tryAlternativeInviteMethod(hash);
-                                        });
-                                } else {
-                                    // Method 2: 代替方法を試行
-                                    tryAlternativeInviteMethod(hash);
+                                // ウィジェットの設定をリセット
+                                if (window.netlifyIdentity.store) {
+                                    window.netlifyIdentity.store.modal = {
+                                        ...window.netlifyIdentity.store.modal,
+                                        page: 'signup',
+                                        isInviteMode: true
+                                    };
                                 }
+                                
+                                // ウィジェットを開く
+                                window.netlifyIdentity.open('signup');
                             } catch (e) {
-                                console.error('Error in invite processing:', e);
-                                // Method 2: 代替方法を試行
-                                tryAlternativeInviteMethod(hash);
+                                console.error('Error opening widget for invite:', e);
+                                // フォールバック：シンプルにウィジェットを開く
+                                window.netlifyIdentity.open();
                             }
                         }, 1000);
                     } else {
@@ -228,9 +237,10 @@
                 document.getElementById('status').textContent = '招待を処理中...';
                 document.getElementById('message').textContent = 'パスワード設定画面が開きます。';
                 
-                // 招待モードでサインアップウィジェットを開く
+                // シンプルにウィジェットを開く（トークンを自動認識させる）
                 setTimeout(() => {
-                    window.netlifyIdentity.open('signup');
+                    console.log('Opening widget for invite in handleAuthFlow');
+                    window.netlifyIdentity.open();
                 }, 1000);
             } else if (hash.includes('recovery_token')) {
                 // パスワードリセットトークンの場合
