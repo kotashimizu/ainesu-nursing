@@ -98,11 +98,12 @@
                     console.log('No user, checking hash:', hash);
                     
                     if (hash.includes('invite_token')) {
-                        // 招待トークンがある場合は即座にウィジェットを開く
+                        // 招待トークンがある場合は特別な処理
                         document.getElementById('status').textContent = '招待リンクを処理中...';
                         document.getElementById('message').textContent = 'パスワードを設定してください。';
                         setTimeout(() => {
-                            window.netlifyIdentity.open();
+                            // 招待モードでウィジェットを開く
+                            window.netlifyIdentity.open('signup');
                         }, 500);
                     } else {
                         handleAuthFlow();
@@ -112,8 +113,9 @@
             
             window.netlifyIdentity.on('signup', user => {
                 console.log('User signed up:', user);
-                document.getElementById('status').textContent = 'アカウントが作成されました！';
+                document.getElementById('status').textContent = 'パスワードが設定されました！';
                 document.getElementById('message').textContent = '管理画面へ移動します...';
+                document.querySelector('.loading').style.display = 'none';
                 setTimeout(() => {
                     window.location.href = '/admin/';
                 }, 2000);
@@ -138,11 +140,11 @@
                     const hash = window.location.hash;
                     if (hash.includes('invite_token')) {
                         document.getElementById('status').textContent = '招待リンクを再処理中...';
-                        document.getElementById('message').textContent = '少々お待ちください。';
+                        document.getElementById('message').textContent = 'パスワード設定画面を開いています...';
                         
-                        // 1秒後に再度ウィジェットを開く
+                        // 1秒後に招待モードでウィジェットを開く
                         setTimeout(() => {
-                            window.netlifyIdentity.open();
+                            window.netlifyIdentity.open('signup');
                         }, 1000);
                         return;
                     }
@@ -170,20 +172,9 @@
                 document.getElementById('status').textContent = '招待を処理中...';
                 document.getElementById('message').textContent = 'パスワード設定画面が開きます。';
                 
-                // 招待トークンを直接処理する
+                // 招待モードでサインアップウィジェットを開く
                 setTimeout(() => {
-                    try {
-                        // 招待トークンを使って直接ウィジェットを開く
-                        window.netlifyIdentity.open();
-                        
-                        // ウィジェット内で招待フローを強制的に開始
-                        window.netlifyIdentity.store.modal.page = 'signup';
-                        window.netlifyIdentity.store.modal.isInviteMode = true;
-                    } catch (e) {
-                        console.error('Error handling invite token:', e);
-                        // フォールバック：通常のサインアップを開く
-                        window.netlifyIdentity.open('signup');
-                    }
+                    window.netlifyIdentity.open('signup');
                 }, 1000);
             } else if (hash.includes('recovery_token')) {
                 // パスワードリセットトークンの場合
