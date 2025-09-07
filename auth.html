@@ -90,8 +90,12 @@
                 // 招待モードでの初期化設定
                 initConfig = {
                     container: null, // デフォルトのポップアップを使用
+                    APIUrl: window.location.origin + '/.netlify/identity', // 明示的にAPIUrlを設定
                 };
                 console.log('Initializing with invite token configuration');
+                // 招待トークンがある場合は即座にサインアップモードを強制
+                document.getElementById('status').textContent = '招待を処理しています...';
+                document.getElementById('message').textContent = 'パスワード設定画面を開いています。';
             }
             
             // APIUrl をハードコードせず、現在のドメインから自動検出
@@ -129,28 +133,25 @@
                         console.log('Extracted invite token:', inviteToken);
                         
                         setTimeout(() => {
-                            // 招待トークンがある場合は、ウィジェットに直接渡す
                             console.log('Opening widget for invite token processing');
                             
-                            // ウィジェットを開き、招待フローを開始
                             try {
-                                // ウィジェットの設定をリセット
-                                if (window.netlifyIdentity.store) {
-                                    window.netlifyIdentity.store.modal = {
-                                        ...window.netlifyIdentity.store.modal,
-                                        page: 'signup',
-                                        isInviteMode: true
-                                    };
-                                }
-                                
-                                // ウィジェットを開く
+                                // 招待モードを強制設定
                                 window.netlifyIdentity.open('signup');
+                                
+                                // 少し遅延を入れてからサインアップモードを強制
+                                setTimeout(() => {
+                                    if (window.netlifyIdentity.store && window.netlifyIdentity.store.modal) {
+                                        window.netlifyIdentity.store.modal.page = 'signup';
+                                    }
+                                }, 500);
+                                
                             } catch (e) {
                                 console.error('Error opening widget for invite:', e);
-                                // フォールバック：シンプルにウィジェットを開く
+                                // フォールバック
                                 window.netlifyIdentity.open();
                             }
-                        }, 1000);
+                        }, 500);
                     } else {
                         handleAuthFlow();
                     }
