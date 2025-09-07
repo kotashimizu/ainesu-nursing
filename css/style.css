@@ -312,10 +312,22 @@ button {
   text-align: center;
 }
 
+.header__logo-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.header__logo-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .header__logo-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .header__logo-main {
@@ -370,7 +382,7 @@ button {
   grid-template-columns: 1fr 350px;
   align-items: center;
   gap: var(--spacing-32);
-  max-width: 1400px;
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--spacing-40) var(--spacing-32);
   width: 100%;
@@ -1831,6 +1843,19 @@ button {
   
   .header__mobile-menu {
     display: flex;
+  }
+  
+  .header__logo-image {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .header__logo-main {
+    font-size: var(--font-size-base);
+  }
+  
+  .header__logo-sub {
+    font-size: 10px;
   }
   
   /* ヒーロー */
