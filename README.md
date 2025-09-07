@@ -49,6 +49,19 @@ nursinghome_hp/
 - Vanilla JavaScript
 - Netlify（ホスティング）
 
+## 📰 ブログ取得先の設定（重要）
+
+ブログ記事・お知らせ一覧は、GitHub上の`_posts`フォルダから読み込みます。
+参照先のリポジトリは `js/config.js` で変更できます（非エンジニア向け）。
+
+変更手順:
+- `js/config.js` を開く
+- 次の2行を書き換える
+  - `githubOwner: 'あなたのGitHubユーザー名'`
+  - `githubRepo: 'あなたのリポジトリ名'`
+
+保存すれば数分でサイトに反映されます（Netlifyの自動公開）。
+
 ## 📞 お問い合わせ
 
 - **電話**: 0532-43-6020

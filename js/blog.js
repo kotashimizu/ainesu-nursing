@@ -8,8 +8,13 @@ class BlogManager {
     // GitHubから記事一覧を取得
     async fetchPosts() {
         try {
+            // 参照先（owner/repo）は設定ファイルから取得（未設定時は既定値）
+            const owner = (window.SITE_CONFIG && window.SITE_CONFIG.githubOwner) || 'kotashimizu';
+            const repo  = (window.SITE_CONFIG && window.SITE_CONFIG.githubRepo)  || 'ainesu-nursing';
+
             // GitHub APIを使用して_postsディレクトリの内容を取得
-            const response = await fetch(`https://api.github.com/repos/kotashimizu/ainesu-nursing/contents/${this.postsDirectory}`);
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${this.postsDirectory}`;
+            const response = await fetch(apiUrl);
             
             if (!response.ok) {
                 console.log('GitHub APIから記事を取得できませんでした');
