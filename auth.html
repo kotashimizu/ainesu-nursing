@@ -93,8 +93,20 @@
                         window.location.href = '/admin/';
                     }, 2000);
                 } else {
-                    // ユーザーがまだログインしていない場合、Widgetを開く
-                    handleAuthFlow();
+                    // ハッシュ確認とトークン処理
+                    const hash = window.location.hash;
+                    console.log('No user, checking hash:', hash);
+                    
+                    if (hash.includes('invite_token')) {
+                        // 招待トークンがある場合は即座にウィジェットを開く
+                        document.getElementById('status').textContent = '招待リンクを処理中...';
+                        document.getElementById('message').textContent = 'パスワードを設定してください。';
+                        setTimeout(() => {
+                            window.netlifyIdentity.open();
+                        }, 500);
+                    } else {
+                        handleAuthFlow();
+                    }
                 }
             });
             
@@ -118,8 +130,26 @@
             
             window.netlifyIdentity.on('error', err => {
                 console.error('Identity error:', err);
+                
+                const errorMessage = err.message || '';
+                
+                if (errorMessage.includes('Public signups are disabled')) {
+                    // 招待リンクの場合の特別処理
+                    const hash = window.location.hash;
+                    if (hash.includes('invite_token')) {
+                        document.getElementById('status').textContent = '招待リンクを再処理中...';
+                        document.getElementById('message').textContent = '少々お待ちください。';
+                        
+                        // 1秒後に再度ウィジェットを開く
+                        setTimeout(() => {
+                            window.netlifyIdentity.open();
+                        }, 1000);
+                        return;
+                    }
+                }
+                
                 document.getElementById('status').textContent = 'エラーが発生しました';
-                document.getElementById('message').textContent = err.message || '処理中にエラーが発生しました。';
+                document.getElementById('message').textContent = errorMessage || '処理中にエラーが発生しました。招待メールのリンクをもう一度クリックしてください。';
                 document.getElementById('homeBtn').style.display = 'inline-block';
                 document.querySelector('.loading').style.display = 'none';
             });
@@ -137,12 +167,23 @@
             
             if (hash.includes('invite_token')) {
                 // 招待トークンの場合
-                document.getElementById('status').textContent = '認証ウィンドウを開いています...';
-                document.getElementById('message').textContent = 'ポップアップウィンドウでパスワードを設定してください。';
+                document.getElementById('status').textContent = '招待を処理中...';
+                document.getElementById('message').textContent = 'パスワード設定画面が開きます。';
                 
+                // 招待トークンを直接処理する
                 setTimeout(() => {
-                    // ログイン画面ではなく招待受諾（パスワード設定）画面を開く
-                    window.netlifyIdentity.open('signup');
+                    try {
+                        // 招待トークンを使って直接ウィジェットを開く
+                        window.netlifyIdentity.open();
+                        
+                        // ウィジェット内で招待フローを強制的に開始
+                        window.netlifyIdentity.store.modal.page = 'signup';
+                        window.netlifyIdentity.store.modal.isInviteMode = true;
+                    } catch (e) {
+                        console.error('Error handling invite token:', e);
+                        // フォールバック：通常のサインアップを開く
+                        window.netlifyIdentity.open('signup');
+                    }
                 }, 1000);
             } else if (hash.includes('recovery_token')) {
                 // パスワードリセットトークンの場合
@@ -150,11 +191,21 @@
                 document.getElementById('message').textContent = '新しいパスワードを設定してください。';
                 
                 setTimeout(() => {
-                    // リセットタブを明示的に開く
-                    window.netlifyIdentity.open('reset');
+                    window.netlifyIdentity.open();
+                    // リセットページを強制表示
+                    try {
+                        window.netlifyIdentity.store.modal.page = 'password';
+                    } catch (e) {
+                        console.log('Using fallback for recovery token');
+                    }
                 }, 1000);
             } else if (hash.includes('confirmation_token')) {
                 document.getElementById('status').textContent = 'メールアドレスを確認中...';
+                document.getElementById('message').textContent = '認証処理を完了しています...';
+                
+                setTimeout(() => {
+                    window.netlifyIdentity.open();
+                }, 1000);
             } else {
                 // トークンがない場合
                 document.getElementById('status').textContent = '認証情報が見つかりません';
