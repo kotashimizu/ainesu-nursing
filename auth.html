@@ -83,34 +83,59 @@
             const hash = window.location.hash;
             console.log('Pre-processing hash:', hash);
             
-            // 招待トークンがある場合の特別な設定
-            let initConfig = {};
-            
+            // 招待トークン専用処理
             if (hash.includes('invite_token')) {
-                // 招待モードでの初期化設定
-                initConfig = {
-                    container: null, // デフォルトのポップアップを使用
-                    APIUrl: window.location.origin + '/.netlify/identity', // 明示的にAPIUrlを設定
-                };
-                console.log('Initializing with invite token configuration');
-                // 招待トークンがある場合は即座にサインアップモードを強制
+                console.log('Found invite token, using acceptInvite method');
                 document.getElementById('status').textContent = '招待を処理しています...';
-                document.getElementById('message').textContent = 'パスワード設定画面を開いています。';
+                document.getElementById('message').textContent = 'パスワード設定画面を準備しています。';
+                
+                // 招待トークンを抽出
+                const inviteToken = extractTokenFromHash(hash, 'invite_token');
+                console.log('Extracted invite token:', inviteToken);
+                
+                if (inviteToken) {
+                    // 特別な初期化設定で招待処理に最適化
+                    const initConfig = {
+                        APIUrl: window.location.origin + '/.netlify/identity',
+                        container: null
+                    };
+                    
+                    window.netlifyIdentity.init(initConfig);
+                    
+                    // 初期化完了後に招待を処理
+                    window.netlifyIdentity.on('init', () => {
+                        console.log('Identity initialized, processing invite token');
+                        try {
+                            // acceptInvite メソッドを使用して招待を処理
+                            window.netlifyIdentity.acceptInvite(inviteToken).then(() => {
+                                console.log('Invite accepted, opening signup');
+                                document.getElementById('status').textContent = 'パスワードを設定してください';
+                                window.netlifyIdentity.open('signup');
+                            }).catch((error) => {
+                                console.error('acceptInvite failed:', error);
+                                // フォールバック: 通常のサインアップを開く
+                                document.getElementById('status').textContent = 'パスワードを設定してください';
+                                window.netlifyIdentity.open('signup');
+                            });
+                        } catch (e) {
+                            console.error('acceptInvite method not available, using fallback:', e);
+                            // フォールバック: URLハッシュをそのままにしてサインアップを開く
+                            document.getElementById('status').textContent = 'パスワードを設定してください';
+                            window.netlifyIdentity.open('signup');
+                        }
+                    });
+                } else {
+                    console.error('Could not extract invite token');
+                    handleNoToken();
+                }
+            } else {
+                // 通常の初期化（招待トークンがない場合）
+                window.netlifyIdentity.init();
             }
             
-            // APIUrl をハードコードせず、現在のドメインから自動検出
-            window.netlifyIdentity.init(initConfig);
-            
-            // 招待トークンがある場合は、初期化完了前に処理
-            if (hash.includes('invite_token')) {
-                console.log('Found invite token, preparing special handling');
-                document.getElementById('status').textContent = '招待トークンを処理中...';
-                document.getElementById('message').textContent = 'しばらくお待ちください。';
-            }
-            
-            // 成功時の処理
+            // 通常の初期化時の処理（招待トークンがない場合）
             window.netlifyIdentity.on('init', user => {
-                console.log('Identity initialized, user:', user);
+                console.log('Normal init - Identity initialized, user:', user);
                 
                 if (user) {
                     document.getElementById('status').textContent = '認証が完了しました！';
@@ -119,40 +144,9 @@
                         window.location.href = '/admin/';
                     }, 2000);
                 } else {
-                    // ハッシュ確認とトークン処理
+                    // 招待トークンがない場合の通常処理
                     const hash = window.location.hash;
-                    console.log('No user, checking hash:', hash);
-                    
-                    if (hash.includes('invite_token')) {
-                        // 招待トークンがある場合は特別な処理
-                        document.getElementById('status').textContent = '招待リンクを処理中...';
-                        document.getElementById('message').textContent = 'パスワードを設定してください。';
-                        
-                        // 招待トークンを抽出
-                        const inviteToken = extractTokenFromHash(hash, 'invite_token');
-                        console.log('Extracted invite token:', inviteToken);
-                        
-                        setTimeout(() => {
-                            console.log('Opening widget for invite token processing');
-                            
-                            try {
-                                // 招待モードを強制設定
-                                window.netlifyIdentity.open('signup');
-                                
-                                // 少し遅延を入れてからサインアップモードを強制
-                                setTimeout(() => {
-                                    if (window.netlifyIdentity.store && window.netlifyIdentity.store.modal) {
-                                        window.netlifyIdentity.store.modal.page = 'signup';
-                                    }
-                                }, 500);
-                                
-                            } catch (e) {
-                                console.error('Error opening widget for invite:', e);
-                                // フォールバック
-                                window.netlifyIdentity.open();
-                            }
-                        }, 500);
-                    } else {
+                    if (!hash.includes('invite_token')) {
                         handleAuthFlow();
                     }
                 }
@@ -181,22 +175,41 @@
                 console.error('Identity error:', err);
                 
                 const errorMessage = err.message || '';
+                const hash = window.location.hash;
                 
                 if (errorMessage.includes('Public signups are disabled')) {
-                    // 招待リンクの場合の特別処理
-                    const hash = window.location.hash;
+                    console.log('Public signups disabled error detected');
+                    
                     if (hash.includes('invite_token')) {
-                        document.getElementById('status').textContent = '招待リンクを再処理中...';
-                        document.getElementById('message').textContent = 'パスワード設定画面を開いています...';
+                        console.log('Attempting to process invite token despite error');
+                        document.getElementById('status').textContent = '招待トークンを再処理中...';
+                        document.getElementById('message').textContent = '少々お待ちください...';
                         
-                        // 1秒後に招待モードでウィジェットを開く
-                        setTimeout(() => {
-                            window.netlifyIdentity.open('signup');
-                        }, 1000);
+                        const inviteToken = extractTokenFromHash(hash, 'invite_token');
+                        if (inviteToken) {
+                            // 直接 acceptInvite を試行
+                            try {
+                                window.netlifyIdentity.acceptInvite(inviteToken).then(() => {
+                                    document.getElementById('status').textContent = 'パスワードを設定してください';
+                                    window.netlifyIdentity.open('signup');
+                                }).catch((acceptError) => {
+                                    console.error('acceptInvite failed in error handler:', acceptError);
+                                    // 最後の手段：identity.html へリダイレクト
+                                    window.location.href = '/identity.html' + hash;
+                                });
+                            } catch (e) {
+                                console.error('acceptInvite not available in error handler:', e);
+                                // フォールバック：identity.html へリダイレクト
+                                window.location.href = '/identity.html' + hash;
+                            }
+                        } else {
+                            handleNoToken();
+                        }
                         return;
                     }
                 }
                 
+                // その他のエラー
                 document.getElementById('status').textContent = 'エラーが発生しました';
                 document.getElementById('message').textContent = errorMessage || '処理中にエラーが発生しました。招待メールのリンクをもう一度クリックしてください。';
                 document.getElementById('homeBtn').style.display = 'inline-block';
@@ -215,6 +228,14 @@
             const regex = new RegExp(tokenName + '=([^&]+)');
             const match = hash.match(regex);
             return match ? match[1] : null;
+        }
+        
+        // トークンが見つからない場合の処理
+        function handleNoToken() {
+            document.getElementById('status').textContent = '招待リンクの処理に失敗しました';
+            document.getElementById('message').textContent = '招待メールのリンクをもう一度クリックしてください。';
+            document.getElementById('homeBtn').style.display = 'inline-block';
+            document.querySelector('.loading').style.display = 'none';
         }
         
         // 代替招待処理方法
