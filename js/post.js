@@ -73,6 +73,14 @@ function displayPost(post) {
             </div>
         </div>
         
+        ${post.thumbnail ? `
+        <div class="post-featured-image">
+            <div class="post-featured-image__container">
+                <img src="${post.thumbnail}" alt="${post.title}" class="post-featured-image__img">
+            </div>
+        </div>
+        ` : ''}
+        
         <div class="post-content">
             <div class="post-content__body">
                 ${bodyHtml}

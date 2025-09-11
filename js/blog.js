@@ -104,11 +104,7 @@ class BlogManager {
                         <div class="blog-card__image">
                             <img src="${post.thumbnail}" alt="${post.title}">
                         </div>
-                    ` : `
-                        <div class="blog-card__image">
-                            画像なし
-                        </div>
-                    `}
+                    ` : ''}
                     <div class="blog-card__content">
                         <div class="blog-card__header">
                             <time class="blog-card__date">${formattedDate}</time>
