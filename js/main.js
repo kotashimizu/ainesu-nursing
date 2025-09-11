@@ -29,6 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // モバイルメニューのリンククリック時にメニューを閉じる
+    const navLinks = document.querySelectorAll('.header__nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (header.classList.contains('header--menu-open')) {
+                header.classList.remove('header--menu-open');
+            }
+        });
+    });
+    
     // スムーススクロール
     const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
     smoothScrollLinks.forEach(link => {
