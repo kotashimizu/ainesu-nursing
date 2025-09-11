@@ -25,7 +25,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (mobileMenuButton) {
         mobileMenuButton.addEventListener('click', function() {
-            header.classList.toggle('header--menu-open');
+            const isOpen = header.classList.contains('header--menu-open');
+            
+            if (isOpen) {
+                header.classList.remove('header--menu-open');
+                document.body.style.overflow = '';
+            } else {
+                header.classList.add('header--menu-open');
+                document.body.style.overflow = 'hidden';
+            }
         });
     }
     
@@ -35,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function() {
             if (header.classList.contains('header--menu-open')) {
                 header.classList.remove('header--menu-open');
+                document.body.style.overflow = '';
             }
         });
     });

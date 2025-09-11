@@ -261,6 +261,14 @@ button {
   transition: all var(--transition-normal) var(--ease-out-cubic);
 }
 
+/* スマホでは常に不透明な背景 */
+@media (max-width: 768px) {
+  .header {
+    background-color: rgba(255, 255, 255, 1);
+    backdrop-filter: none;
+  }
+}
+
 .header__container {
   max-width: var(--container-max);
   height: 100%;
@@ -1887,8 +1895,14 @@ button {
     display: block;
     width: 100%;
     text-align: center;
-    padding: var(--spacing-6) var(--spacing-8);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-8) var(--spacing-8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast) var(--ease-default);
+  }
+  
+  .header--menu-open .header__nav-item:last-child .header__nav-link {
+    border-bottom: none;
   }
   
   /* ハンバーガーメニューアニメーション */
@@ -1907,7 +1921,21 @@ button {
   /* メニューオープン時の背景色 */
   .header--menu-open {
     background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  /* メニューオープン時のナビゲーション背景 */
+  .header--menu-open .header__nav {
+    background-color: rgba(255, 255, 255, 1);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: var(--spacing-4);
+  }
+  
+  /* メニューリンクのホバー効果改善 */
+  .header--menu-open .header__nav-link:hover {
+    background-color: rgba(120, 193, 0, 0.05);
+    color: var(--color-green-500);
   }
   
   .header__logo-image {
