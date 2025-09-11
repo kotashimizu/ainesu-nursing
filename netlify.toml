@@ -1,0 +1,69 @@
+# Netlify Configuration File
+
+# フォーム設定
+[[forms]]
+  name = "contact"
+  fields = [
+    "contact_type",
+    "name", 
+    "kana",
+    "tel",
+    "email", 
+    "message"
+  ]
+  
+  # スパム対策
+  honeypot = "bot-field"
+  
+  # 送信後のリダイレクト
+  action = "/thanks.html"
+  
+  # メール通知設定
+  [forms.notifications.emails]
+    to = ["info@ainesu-nursing.com"]
+    subject = "【あいねすの家】新しいお問い合わせが届きました"
+    body = """
+新しいお問い合わせが届きました。
+
+■ お問い合わせ種別
+{{ contact_type }}
+
+■ お名前
+{{ name }}
+
+■ フリガナ  
+{{ kana }}
+
+■ 電話番号
+{{ tel }}
+
+■ メールアドレス
+{{ email }}
+
+■ お問い合わせ内容
+{{ message }}
+
+---
+送信日時: {{ date }}
+送信元IP: {{ ip }}
+    """
+
+# ビルド設定
+[build]
+  publish = "/"
+  command = ""
+
+# リダイレクト設定（必要に応じて）
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# セキュリティヘッダー
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

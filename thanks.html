@@ -83,7 +83,19 @@
 <body>
     <header class="header">
         <div class="header__container">
-            <nav class="header__nav header__nav--left">
+            <!-- 左側ロゴ -->
+            <div class="header__logo">
+                <a href="/" class="header__logo-link">
+                    <img src="/images/logo.png" alt="あいねすの家 訪問看護ステーション" class="header__logo-image">
+                    <div class="header__logo-text">
+                        <span class="header__logo-main">あいねすの家</span>
+                        <span class="header__logo-sub">訪問看護ステーション</span>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 右側ナビゲーション -->
+            <nav class="header__nav">
                 <ul class="header__nav-list">
                     <li class="header__nav-item">
                         <a href="/service.html" class="header__nav-link">
@@ -95,20 +107,6 @@
                             <span class="header__nav-text">3つの特徴</span>
                         </a>
                     </li>
-                </ul>
-            </nav>
-            
-            <div class="header__logo">
-                <a href="/" class="header__logo-link">
-                    <div class="header__logo-text">
-                        <span class="header__logo-main">あいねすの家</span>
-                        <span class="header__logo-sub">訪問看護ステーション</span>
-                    </div>
-                </a>
-            </div>
-            
-            <nav class="header__nav header__nav--right">
-                <ul class="header__nav-list">
                     <li class="header__nav-item">
                         <a href="/flow.html" class="header__nav-link">
                             <span class="header__nav-text">ご利用の流れ</span>
@@ -122,6 +120,7 @@
                 </ul>
             </nav>
             
+            <!-- モバイルメニューボタン -->
             <button type="button" class="header__mobile-menu" aria-label="メニューを開く">
                 <span class="header__mobile-menu-line"></span>
                 <span class="header__mobile-menu-line"></span>

@@ -1,0 +1,50 @@
+name: Form Submission Notifications
+on:
+  repository_dispatch:
+    types: [form-submission]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Notification (Optional)
+        if: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          custom_payload: |
+            {
+              text: "新しいお問い合わせが届きました",
+              attachments: [{
+                color: "good",
+                fields: [
+                  {
+                    title: "お問い合わせ種別",
+                    value: "${{ github.event.client_payload.contact_type }}",
+                    short: true
+                  },
+                  {
+                    title: "お名前",
+                    value: "${{ github.event.client_payload.name }}",
+                    short: true
+                  },
+                  {
+                    title: "電話番号", 
+                    value: "${{ github.event.client_payload.tel }}",
+                    short: true
+                  },
+                  {
+                    title: "メールアドレス",
+                    value: "${{ github.event.client_payload.email }}",
+                    short: true
+                  }
+                ]
+              }]
+            }
+
+      - name: Log Form Submission
+        run: |
+          echo "Form submission received at $(date)"
+          echo "Contact Type: ${{ github.event.client_payload.contact_type }}"
+          echo "Name: ${{ github.event.client_payload.name }}"

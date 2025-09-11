@@ -47,7 +47,45 @@ nursinghome_hp/
 - HTML5
 - CSS3
 - Vanilla JavaScript
-- Netlify（ホスティング）
+- Netlify（ホスティング・フォーム処理）
+- Netlify Identity（認証）
+
+## 📧 メール受信設定
+
+### Netlify Forms設定
+
+このサイトのお問い合わせフォームは、Netlifyの組み込みフォーム機能を使用しています。
+
+#### 設定ファイル
+
+1. **netlify.toml** - メイン設定ファイル
+   - フォーム定義
+   - メール通知設定
+   - セキュリティヘッダー設定
+
+2. **_data/notifications.yml** - 通知テンプレート設定
+   - 管理者向け通知メール
+   - 顧客向け自動返信メール（オプション）
+
+#### フォーム機能
+
+- **スパム対策**: Honeypot機能とNetlifyのスパムフィルター
+- **自動通知**: 新しいお問い合わせの即座の通知
+- **データ保存**: Netlify管理画面でフォーム送信データを確認可能
+- **リダイレクト**: 送信後の自動thanks.htmlリダイレクト
+
+#### セットアップ手順
+
+1. Netlifyでサイトをデプロイ
+2. `netlify.toml`の通知先メールアドレスを更新
+3. フォーム設定を確認
+4. テスト送信を実行
+
+#### 管理
+
+- フォーム送信: Netlify Dashboard > Forms
+- 通知設定: Site Settings > Forms
+- スパム設定: Forms > Spam detection
 
 ## 📰 ブログ取得先の設定（重要）
 
