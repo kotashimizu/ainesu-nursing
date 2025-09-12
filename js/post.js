@@ -73,20 +73,19 @@ function displayPost(post) {
             </div>
         </div>
         
+        ${post.thumbnail ? `
         <div class="post-featured-image">
             <div class="post-featured-image__container">
-                ${post.thumbnail ? `
-                    <img src="${post.thumbnail}" alt="${post.title}" class="post-featured-image__img" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\"post-featured-image__placeholder\\"><svg width=\\"64\\" height=\\"64\\" fill=\\"currentColor\\" viewBox=\\"0 0 24 24\\"><path d=\\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\\"/></svg><span>画像が読み込めませんでした</span></div>';">
-                ` : `
-                    <div class="post-featured-image__placeholder">
-                        <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                        </svg>
-                        <span>画像なし</span>
-                    </div>
-                `}
+                <img src="${post.thumbnail}" alt="${post.title}" class="post-featured-image__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="post-featured-image__placeholder" style="display: none;">
+                    <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    <span>画像が読み込めませんでした</span>
+                </div>
             </div>
         </div>
+        ` : ''}
         
         <div class="post-content">
             <div class="post-content__body">
