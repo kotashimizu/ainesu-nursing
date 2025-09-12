@@ -1927,6 +1927,18 @@ button {
     padding-top: var(--spacing-4);
   }
   
+  /* モバイルメニューオープン時の本文マージン調整 */
+  .header--menu-open ~ #main {
+    margin-top: calc(var(--header-height) + 200px);
+    transition: margin-top var(--transition-normal) var(--ease-default);
+  }
+  
+  /* モバイルメニューオープン時の一般的なページコンテンツ調整 */
+  .header--menu-open ~ main {
+    margin-top: calc(var(--header-height) + 200px);
+    transition: margin-top var(--transition-normal) var(--ease-default);
+  }
+  
   /* メニューリンクのホバー効果改善 */
   .header--menu-open .header__nav-link:hover {
     background-color: rgba(120, 193, 0, 0.05);
