@@ -20,7 +20,7 @@
   
   # メール通知設定
   [forms.notifications.emails]
-    to = ["info@ainesu-nursing.com"]
+    to = ["effort.is.life@gmail.com", "ideal.s646@gmail.com"]
     subject = "【あいねすの家】新しいお問い合わせが届きました"
     body = """
 新しいお問い合わせが届きました。
